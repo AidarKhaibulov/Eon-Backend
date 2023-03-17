@@ -1,6 +1,7 @@
 package rest.eon.models;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,13 +14,15 @@ import java.util.List;
 
 
 @Data
+@Builder
 @Document("users")
 public class User implements UserDetails {
     @Id
     private String id;
-    private String login;
+    private String firstname;
+    private String lastname;
+    private String email;
     private String password;
-    private String username;
     private String role;
 
     @Override
@@ -28,7 +31,7 @@ public class User implements UserDetails {
     }
     @Override
     public String getUsername(){
-        return username;
+        return email;
     }
     @Override
     public boolean isAccountNonExpired() {
