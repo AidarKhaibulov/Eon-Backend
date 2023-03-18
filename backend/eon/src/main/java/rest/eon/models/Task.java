@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class Task {
     @Id
     private String id;
-    private LocalDateTime date;
+    private String date;
     private String title;
 
 }
