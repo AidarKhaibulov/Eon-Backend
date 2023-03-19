@@ -18,4 +18,9 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserIdByEmail(String email) {
         return userRepository.getFirstByEmail(email);
     }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

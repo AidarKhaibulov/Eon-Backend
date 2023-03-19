@@ -1,20 +1,26 @@
 package rest.eon.services.impl;
 
 import org.springframework.stereotype.Service;
+import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.Task;
+import rest.eon.models.User;
 import rest.eon.repositories.TaskRepository;
+import rest.eon.repositories.UserRepository;
 import rest.eon.services.TaskService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
-    public TaskServiceImpl(TaskRepository taskRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository) {
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Task> getAll(){
@@ -23,7 +29,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task save(Task task) {
-        return taskRepository.save(task);
+        Task savedTask=taskRepository.save(task);
+        User currentUser=userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
+        List<Task> currentUserTasks=currentUser.getTasks();
+        if(currentUserTasks==null)
+            currentUserTasks= new ArrayList<>();
+        currentUserTasks.add(savedTask);
+        currentUser.setTasks(currentUserTasks);
+        userRepository.save(currentUser);
+        return savedTask;
     }
 
     @Override

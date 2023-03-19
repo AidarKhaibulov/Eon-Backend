@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.Task;
+import rest.eon.models.User;
 import rest.eon.services.TaskService;
 import rest.eon.services.impl.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController()
@@ -34,17 +36,19 @@ public class TaskController {
 
     @PostMapping("/add")
     ResponseEntity<Task> createNewTask(@Valid @RequestBody TaskDto task) {
-        logger.info("Created new task: " + task.toString());
+        String currentUserEmail= SecurityUtil.getSessionUser();
+        task.setUserId(userService.getUserIdByEmail(currentUserEmail).get().getId());
+        logger.info("Created new task: " + task);
         return ResponseEntity.ok(taskService.save(taskService.mapToTask(task)));
     }
 
     @PutMapping("/edit/{id}")
     ResponseEntity<Task> editTask(@Valid @RequestBody TaskDto newTask, @PathVariable String id) {
-        String email= SecurityUtil.getSessionUser();
+        String currentUserEmail= SecurityUtil.getSessionUser();
         return taskService.getTaskById(id).map(task -> {
             task.setDate(newTask.getDate());
             task.setTitle(newTask.getTitle());
-            task.setUserId(userService.getUserIdByEmail(email).get().getId());
+            task.setUserId(userService.getUserIdByEmail(currentUserEmail).get().getId());
             logger.info("Task with id " + id + " has been updated!");
             return ResponseEntity.ok(taskService.save(task));
         }).orElseGet(() -> {

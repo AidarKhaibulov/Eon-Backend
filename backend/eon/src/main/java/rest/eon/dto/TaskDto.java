@@ -17,7 +17,6 @@ public class TaskDto {
 
     @NotEmpty(message = "Title should not be empty")
     private String title;
-    @NotEmpty(message = "Task should contain reference to user")
     private String userId;
 
 }
