@@ -1,5 +1,6 @@
 package rest.eon.services;
 
+import rest.eon.dto.TaskDto;
 import rest.eon.models.Task;
 
 import java.util.List;
@@ -12,4 +13,8 @@ public interface TaskService{
     Optional<Task> getTaskById(String id);
 
     void delete(String id);
+
+    Task mapToTask(TaskDto taskDto);
+
+    TaskDto mapToTaskDto(Task task);
 }

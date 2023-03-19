@@ -14,11 +14,14 @@ public class EonApplication {
 
     public static void main(String[] args) throws IOException {
         try (
-                InputStream is1 = EonApplication.class.getResourceAsStream("/secretkey.txt");
-                BufferedReader reader1 = new BufferedReader(new InputStreamReader(is1));
-        )
-        {
-            JWT_SECRET_KEY=reader1.readLine();
+                InputStream is1 = EonApplication.class.getResourceAsStream("/secretkey.txt")
+        ) {
+            assert is1 != null;
+            try (BufferedReader reader1 = new BufferedReader(new InputStreamReader(is1))
+            )
+            {
+                JWT_SECRET_KEY=reader1.readLine();
+            }
         }
         SpringApplication.run(EonApplication.class, args);
 

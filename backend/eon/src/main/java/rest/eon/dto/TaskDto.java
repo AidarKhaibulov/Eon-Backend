@@ -1,9 +1,10 @@
 package rest.eon.dto;
 
-
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+
 
 import java.time.LocalDateTime;
 
@@ -11,9 +12,12 @@ import java.time.LocalDateTime;
 @Builder
 public class TaskDto {
     private String id;
-    @NotEmpty(message = "Date should not be empty")
+    @NotNull(message = "Date should not be null")
     private LocalDateTime date;
+
     @NotEmpty(message = "Title should not be empty")
     private String title;
+    @NotEmpty(message = "Task should contain reference to user")
+    private String userId;
 
 }

@@ -1,6 +1,7 @@
 package rest.eon.services.impl;
 
 import org.springframework.stereotype.Service;
+import rest.eon.dto.TaskDto;
 import rest.eon.models.Task;
 import rest.eon.repositories.TaskRepository;
 import rest.eon.services.TaskService;
@@ -29,9 +30,26 @@ public class TaskServiceImpl implements TaskService {
     public Optional<Task> getTaskById(String id) {
         return taskRepository.findById(id);
     }
-
     @Override
     public void delete(String id) {
         taskRepository.deleteById(id);
+    }
+    @Override
+    public Task mapToTask(TaskDto taskDto){
+        return Task.builder()
+                .id(taskDto.getId())
+                .title(taskDto.getTitle())
+                .date(taskDto.getDate())
+                .userId(taskDto.getUserId())
+                .build();
+    }
+    @Override
+    public TaskDto mapToTaskDto(Task task) {
+        return TaskDto.builder()
+                .id(task.getId())
+                .title(task.getTitle())
+                .date(task.getDate())
+                .userId(task.getUserId())
+                .build();
     }
 }
