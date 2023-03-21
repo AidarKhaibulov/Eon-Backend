@@ -23,17 +23,23 @@ public class TaskServiceImpl implements TaskService {
         this.userRepository = userRepository;
     }
 
-    public List<Task> getAll(){
+    public List<Task> getAll() {
         return taskRepository.findAll();
     }
 
     @Override
     public Task save(Task task) {
-        Task savedTask=taskRepository.save(task);
-        User currentUser=userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
-        List<Task> currentUserTasks=currentUser.getTasks();
-        if(currentUserTasks==null)
-            currentUserTasks= new ArrayList<>();
+
+        User currentUser = userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
+        List<Task> currentUserTasks = currentUser.getTasks();
+        if (currentUserTasks == null)
+            currentUserTasks = new ArrayList<>();
+        for (var o : currentUserTasks) {
+            if (o.getDate().equals(task.getDate()))
+                return null;
+        }
+        Task savedTask = taskRepository.save(task);
+        //TODO: figure out why tasks save with localtime -3
         currentUserTasks.add(savedTask);
         currentUser.setTasks(currentUserTasks);
         userRepository.save(currentUser);
@@ -44,12 +50,14 @@ public class TaskServiceImpl implements TaskService {
     public Optional<Task> getTaskById(String id) {
         return taskRepository.findById(id);
     }
+
     @Override
     public void delete(String id) {
         taskRepository.deleteById(id);
     }
+
     @Override
-    public Task mapToTask(TaskDto taskDto){
+    public Task mapToTask(TaskDto taskDto) {
         return Task.builder()
                 .id(taskDto.getId())
                 .title(taskDto.getTitle())
@@ -57,6 +65,7 @@ public class TaskServiceImpl implements TaskService {
                 .userId(taskDto.getUserId())
                 .build();
     }
+
     @Override
     public TaskDto mapToTaskDto(Task task) {
         return TaskDto.builder()

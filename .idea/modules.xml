@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Eon-Backend.iml" filepath="$PROJECT_DIR$/.idea/Eon-Backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/eon.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eon.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rest.eon.main.iml" filepath="$PROJECT_DIR$/.idea/modules/rest.eon.main.iml" />
     </modules>
   </component>
 </project>

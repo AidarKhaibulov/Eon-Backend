@@ -28,21 +28,23 @@ public class TaskController {
         this.userService = userService;
     }
 
-    @GetMapping("/fetchAll")
+    @GetMapping()
     public List<Task> fetchTasks() {
         logger.info("fetched all the tasks");
         return taskService.getAll();
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     ResponseEntity<Task> createNewTask(@Valid @RequestBody TaskDto task) {
         String currentUserEmail= SecurityUtil.getSessionUser();
         task.setUserId(userService.getUserIdByEmail(currentUserEmail).get().getId());
-        logger.info("Created new task: " + task);
-        return ResponseEntity.ok(taskService.save(taskService.mapToTask(task)));
+        Task createdTask=taskService.save(taskService.mapToTask(task));
+        if(createdTask!=null)
+        return ResponseEntity.ok(createdTask);
+        else return null;
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<Task> editTask(@Valid @RequestBody TaskDto newTask, @PathVariable String id) {
         String currentUserEmail= SecurityUtil.getSessionUser();
         return taskService.getTaskById(id).map(task -> {
@@ -51,15 +53,11 @@ public class TaskController {
             task.setUserId(userService.getUserIdByEmail(currentUserEmail).get().getId());
             logger.info("Task with id " + id + " has been updated!");
             return ResponseEntity.ok(taskService.save(task));
-        }).orElseGet(() -> {
-            logger.info("Created new task: " + newTask.toString());
-            return ResponseEntity.ok(taskService.save(taskService.mapToTask(newTask)));
-        });
+        }).orElseGet(() -> ResponseEntity.ok(taskService.save(taskService.mapToTask(newTask))));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     void deleteTask(@PathVariable String id) {
-        logger.info("Task with id " + id + " has been deleted!");
         taskService.delete(id);
     }
 
