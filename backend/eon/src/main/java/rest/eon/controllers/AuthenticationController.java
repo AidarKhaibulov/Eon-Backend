@@ -9,6 +9,7 @@ import rest.eon.auth.AuthenticationResponse;
 import rest.eon.auth.AuthenticationService;
 import rest.eon.auth.RegisterRequest;
 
+@CrossOrigin(origins = "https://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor

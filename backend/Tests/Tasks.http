@@ -1,0 +1,28 @@
+### Authorization by token
+POST http://localhost:8080/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "kk@email.ru",
+  "password": "123"
+}
+
+
+###
+GET http://localhost:8080/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTQ3Mjc0MCwiZXhwIjoxNjc5NDk0MzQwfQ.mz9dyFlYGyOTU6Dj94BhBOiR07bt2gg-OtCEKOba39g
+
+###
+POST http://localhost:8080/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTQ3Mjc0MCwiZXhwIjoxNjc5NDk0MzQwfQ.mz9dyFlYGyOTU6Dj94BhBOiR07bt2gg-OtCEKOba39g
+
+{
+  "date": "2023-05-01T13:00:00Z",
+  "title": "running"
+}
+
+###
+DELETE http://localhost:8080/tasks/641ae9413c731f1d25d7587e
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTQ3Mjc0MCwiZXhwIjoxNjc5NDk0MzQwfQ.mz9dyFlYGyOTU6Dj94BhBOiR07bt2gg-OtCEKOba39g
+

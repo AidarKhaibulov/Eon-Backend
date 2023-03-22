@@ -39,7 +39,6 @@ public class TaskServiceImpl implements TaskService {
                 return null;
         }
         Task savedTask = taskRepository.save(task);
-        //TODO: figure out why tasks save with localtime -3
         currentUserTasks.add(savedTask);
         currentUser.setTasks(currentUserTasks);
         userRepository.save(currentUser);
@@ -53,6 +52,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void delete(String id) {
+        User currentUser = userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
+        List<Task> currentTasks = currentUser.getTasks();
+        currentTasks.remove(currentTasks.stream().findFirst().filter(t->t.getId().equals(id)).get());
+        currentUser.setTasks(currentTasks);
+        userRepository.save(currentUser);
         taskRepository.deleteById(id);
     }
 

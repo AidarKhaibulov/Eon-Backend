@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class TaskDto {
     private String id;
     @NotNull(message = "Date should not be null")
-    private LocalDateTime date;
+    private String date;
 
     @NotEmpty(message = "Title should not be empty")
     private String title;

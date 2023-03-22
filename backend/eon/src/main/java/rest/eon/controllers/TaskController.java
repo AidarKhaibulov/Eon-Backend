@@ -15,7 +15,7 @@ import rest.eon.services.impl.UserService;
 import java.util.List;
 import java.util.Optional;
 
-
+@CrossOrigin(origins = "https://localhost:3000", maxAge = 3600)
 @RestController()
 @RequestMapping("/tasks")
 public class TaskController {

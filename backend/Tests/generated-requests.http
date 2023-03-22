@@ -1,0 +1,29 @@
+### Authentication request with correct credentials
+POST http://localhost:8080/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "kk@email.ru",
+  "password": "123"
+}
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### Authentication request with invalid credentials
+POST http://localhost:8080/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "kk@email.ru",
+  "password": "555"
+}
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 403, "Response status is not 403");
+    });
+%}
+
+
