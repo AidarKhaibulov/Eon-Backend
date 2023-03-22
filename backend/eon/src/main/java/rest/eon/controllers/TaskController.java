@@ -8,14 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.Task;
-import rest.eon.models.User;
 import rest.eon.services.TaskService;
 import rest.eon.services.impl.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
-@CrossOrigin(origins = "https://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController()
 @RequestMapping("/tasks")
 public class TaskController {
