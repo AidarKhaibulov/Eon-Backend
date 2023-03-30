@@ -28,6 +28,7 @@ dependencies {
 	implementation group: 'org.springframework.security', name: 'spring-security-web', version: '6.0.2'
 	implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.0.2'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

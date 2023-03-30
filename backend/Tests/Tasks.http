@@ -10,19 +10,28 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTQ3Mjc0MCwiZXhwIjoxNjc5NDk0MzQwfQ.mz9dyFlYGyOTU6Dj94BhBOiR07bt2gg-OtCEKOba39g
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTU1NzEyNiwiZXhwIjoxNjc5NTc4NzI2fQ.zAoFuFjTDsbrQ1I_VRgS7Nqfam50M676cpTlxdeddiA
 
 ###
 POST http://localhost:8080/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTQ3Mjc0MCwiZXhwIjoxNjc5NDk0MzQwfQ.mz9dyFlYGyOTU6Dj94BhBOiR07bt2gg-OtCEKOba39g
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTU1NzEyNiwiZXhwIjoxNjc5NTc4NzI2fQ.zAoFuFjTDsbrQ1I_VRgS7Nqfam50M676cpTlxdeddiA
 
 {
-  "date": "2023-05-01T13:00:00Z",
+  "date": "2023-05-01T14:00:00Z",
   "title": "running"
+}
+###
+PUT http://localhost:8080/tasks/641ae9483c731f1d25d758f
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTU1NzEyNiwiZXhwIjoxNjc5NTc4NzI2fQ.zAoFuFjTDsbrQ1I_VRgS7Nqfam50M676cpTlxdeddiA
+
+{
+"date": "2023-05-01T14:00:00Z",
+"title": "running"
 }
 
 ###
-DELETE http://localhost:8080/tasks/641ae9413c731f1d25d7587e
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTQ3Mjc0MCwiZXhwIjoxNjc5NDk0MzQwfQ.mz9dyFlYGyOTU6Dj94BhBOiR07bt2gg-OtCEKOba39g
+DELETE http://localhost:8080/tasks/641ae9483c731f1d25d7587f
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTU1NzEyNiwiZXhwIjoxNjc5NTc4NzI2fQ.zAoFuFjTDsbrQ1I_VRgS7Nqfam50M676cpTlxdeddiA
 

@@ -12,7 +12,7 @@ import rest.eon.models.User;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -26,10 +26,11 @@ public class AuthenticationService {
                 .role("USER")
                 .build();
         System.out.println(user.toString());
-        repository.save(user);
+        userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(userRepository.findByEmail(request.getEmail()).get().getId())
                 .build();
     }
 
@@ -40,11 +41,12 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
+        var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(userRepository.findByEmail(request.getEmail()).get().getId())
                 .build();
     }
 

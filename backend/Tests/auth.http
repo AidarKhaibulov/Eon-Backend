@@ -1,0 +1,18 @@
+###
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "firstname":"vasua",
+  "lastname":"User",
+  "email":"d@email.ru",
+  "password":"demopass"
+}
+###
+POST http://localhost:8080/auth/authenticate
+Content-Type: application/json
+
+{
+"email":"d@email.ru",
+"password":"demopass"
+}

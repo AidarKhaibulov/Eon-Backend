@@ -3,6 +3,7 @@ package rest.eon.services.impl;
 import org.springframework.stereotype.Service;
 import rest.eon.models.User;
 import rest.eon.repositories.UserRepository;
+import rest.eon.services.UserService;
 
 import java.util.Optional;
 

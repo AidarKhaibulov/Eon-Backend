@@ -1,4 +1,4 @@
-package rest.eon.services.impl;
+package rest.eon.services;
 
 import rest.eon.models.User;
 
