@@ -16,5 +16,6 @@ public class Task {
     private String date;
     private String title;
     private String userId;
+    private String groupId;
 
 }

@@ -7,24 +7,30 @@ Content-Type: application/json
   "password": "123"
 }
 
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("auth_token", response.body.token);
+%}
 
 ###
 GET http://localhost:8080/tasks
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTU1NzEyNiwiZXhwIjoxNjc5NTc4NzI2fQ.zAoFuFjTDsbrQ1I_VRgS7Nqfam50M676cpTlxdeddiA
+Authorization: Bearer {{auth_token}}
 
 ###
 POST http://localhost:8080/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTU1NzEyNiwiZXhwIjoxNjc5NTc4NzI2fQ.zAoFuFjTDsbrQ1I_VRgS7Nqfam50M676cpTlxdeddiA
+Authorization: Bearer {{auth_token}}
 
 {
-  "date": "2023-05-01T14:00:00Z",
-  "title": "running"
+  "date": "2023-05-11T14:00:00Z",
+  "title": "shopping"
 }
 ###
-PUT http://localhost:8080/tasks/641ae9483c731f1d25d758f
+PUT http://localhost:8080/tasks/642a91666dd75105070ced36
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTU1NzEyNiwiZXhwIjoxNjc5NTc4NzI2fQ.zAoFuFjTDsbrQ1I_VRgS7Nqfam50M676cpTlxdeddiA
+Authorization: Bearer {{auth_token}}
 
 {
 "date": "2023-05-01T14:00:00Z",
@@ -32,6 +38,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6M
 }
 
 ###
-DELETE http://localhost:8080/tasks/641ae9483c731f1d25d7587f
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJra0BlbWFpbC5ydSIsImlhdCI6MTY3OTU1NzEyNiwiZXhwIjoxNjc5NTc4NzI2fQ.zAoFuFjTDsbrQ1I_VRgS7Nqfam50M676cpTlxdeddiA
+DELETE http://localhost:8080/tasks/642a91666dd75105070ced36
+Authorization: Bearer {{auth_token}}
 

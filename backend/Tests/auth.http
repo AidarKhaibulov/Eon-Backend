@@ -3,10 +3,11 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
+  "nickname":"avvv",
   "firstname":"vasua",
   "lastname":"User",
-  "email":"d@email.ru",
-  "password":"demopass"
+  "email":"ddf@email.ru",
+  "password":"12345678"
 }
 ###
 POST http://localhost:8080/auth/authenticate

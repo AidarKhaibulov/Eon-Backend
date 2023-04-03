@@ -1,5 +1,6 @@
 package rest.eon.services.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.TaskDto;
@@ -14,14 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
-
-    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository) {
-        this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
-    }
 
     public List<Task> getAll() {
         return taskRepository.findAll();
@@ -29,17 +26,17 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task save(Task task) {
-
         User currentUser = userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
-        List<Task> currentUserTasks = currentUser.getTasks();
-        if (currentUserTasks == null)
-            currentUserTasks = new ArrayList<>();
-        for (var o : currentUserTasks) {
-            if (o.getDate().equals(task.getDate()))
-                return null;
+        List<String> currentUserTasks = new ArrayList<>();
+        if (currentUser.getTasks() != null) {
+            currentUser.getTasks().stream().map(t->currentUserTasks.add(getTaskById(t).get().getId()));
+            for (var o : currentUserTasks) {
+                if (getTaskById(o).get().getDate().equals(task.getDate()))
+                    return null;
+            }
         }
         Task savedTask = taskRepository.save(task);
-        currentUserTasks.add(savedTask);
+        currentUserTasks.add(savedTask.getId());
         currentUser.setTasks(currentUserTasks);
         userRepository.save(currentUser);
         return savedTask;
@@ -53,8 +50,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void delete(String id) {
         User currentUser = userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
-        List<Task> currentTasks = currentUser.getTasks();
-        currentTasks.remove(currentTasks.stream().findFirst().filter(t->t.getId().equals(id)).get());
+        List<String> currentTasks = currentUser.getTasks();
+        currentTasks.remove(currentTasks.stream().findFirst().filter(t->t.equals(id)).get());
         currentUser.setTasks(currentTasks);
         userRepository.save(currentUser);
         taskRepository.deleteById(id);

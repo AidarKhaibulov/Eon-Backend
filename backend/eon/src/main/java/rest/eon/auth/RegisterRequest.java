@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+    @Size(min=2,max=24,message="invalid nickname length")
+    private String nickname;
     @Size(min=2,max=24,message="invalid firstname length")
     private String firstname;
     @Size(min=2,max=24,message="invalid lastname length")

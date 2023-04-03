@@ -20,11 +20,14 @@ public class User implements UserDetails {
     @Id
     private String id;
     private String firstname;
+    private String nickname;
     private String lastname;
     private String email;
     private String password;
     private String role;
-    private List<Task> tasks;
+    private List<String> tasks;
+    private List<String> membershipGroups;
+    private List<String> adminGroups;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

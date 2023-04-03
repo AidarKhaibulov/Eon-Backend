@@ -1,0 +1,129 @@
+### Register
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "nickname": "ggwp",
+  "firstname":"demo",
+  "lastname":"user",
+  "email":"demo@email.ru",
+  "password":"demopass"
+}
+
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+### Register with the same email
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "nickname": "ggwp",
+  "firstname":"demo",
+  "lastname":"user",
+  "email":"demo@email.ru",
+  "password":"demopass"
+}
+
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 403, "Response status is not 403");
+    });
+%}
+### Authentication
+POST http://localhost:8080/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "demo@email.ru",
+  "password": "demopass"
+}
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("auth_token", response.body.token);
+%}
+### Update user data
+PUT http://localhost:8080/user
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "nickname": "Vasya",
+    "password": "1233452345"
+}
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+### Get user data
+GET http://localhost:8080/user
+Authorization: Bearer {{auth_token}}
+
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+### Create new task
+POST http://localhost:8080/tasks
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "date": "2023-05-11T14:00:00Z",
+  "title": "shopping"
+}
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("task_id", response.body.id);
+%}
+### Update task
+PUT http://localhost:8080/tasks/{{task_id}}
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "date": "2023-05-01T14:00:00Z",
+  "title": "running"
+}
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### Get task
+GET http://localhost:8080/tasks
+Authorization: Bearer {{auth_token}}
+
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+###
+DELETE http://localhost:8080/tasks/{{task_id}}
+Authorization: Bearer {{auth_token}}
+
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+###
+DELETE http://localhost:8080/user
+Authorization: Bearer {{auth_token}}
+
+> {%
+    client.test("SUCCESS!", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}

@@ -9,4 +9,8 @@ public interface UserService {
     Optional<User> getUserIdByEmail(String email);
 
     Optional<User> getUserByEmail(String email);
+
+    User save(User user);
+
+    void deleteByEmail(String email);
 }

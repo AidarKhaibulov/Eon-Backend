@@ -1,0 +1,29 @@
+###
+POST http://localhost:8080/auth/authenticate
+Content-Type: application/json
+
+{
+  "email":"ddf@email.ru",
+  "password":"12345678"
+}
+
+> {% client.global.set("auth_token", response.body.token);%}
+
+###
+POST http://localhost:8080/groups
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "name":"123"
+}
+
+###
+PUT http://localhost:8080/groups/642afe6a08c8c75d30999179
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "name":"lol"
+}
+

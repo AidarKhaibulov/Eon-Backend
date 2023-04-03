@@ -18,5 +18,6 @@ public class TaskDto {
     @NotEmpty(message = "Title should not be empty")
     private String title;
     private String userId;
+    private String groupId;
 
 }
