@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.bson.json.JsonParseException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ import static rest.eon.EonApplication.JWT_SECRET_KEY;
 public class JwtService {
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+            return extractClaim(token, Claims::getSubject);
+
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {

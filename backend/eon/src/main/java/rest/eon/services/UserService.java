@@ -13,4 +13,6 @@ public interface UserService {
     User save(User user);
 
     void deleteByEmail(String email);
+
+    Optional<User> getUserById(String userId);
 }

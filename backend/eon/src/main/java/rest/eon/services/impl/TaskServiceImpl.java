@@ -29,7 +29,7 @@ public class TaskServiceImpl implements TaskService {
         User currentUser = userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
         List<String> currentUserTasks = new ArrayList<>();
         if (currentUser.getTasks() != null) {
-            currentUser.getTasks().stream().map(t->currentUserTasks.add(getTaskById(t).get().getId()));
+            currentUser.getTasks().stream().forEach(t->currentUserTasks.add(getTaskById(t).get().getId()));
             for (var o : currentUserTasks) {
                 if (getTaskById(o).get().getDate().equals(task.getDate()))
                     return null;
@@ -64,6 +64,8 @@ public class TaskServiceImpl implements TaskService {
                 .title(taskDto.getTitle())
                 .date(taskDto.getDate())
                 .userId(taskDto.getUserId())
+                .groupId(taskDto.getGroupId())
+                .isCompleted(taskDto.isCompleted())
                 .build();
     }
 
@@ -74,6 +76,8 @@ public class TaskServiceImpl implements TaskService {
                 .title(task.getTitle())
                 .date(task.getDate())
                 .userId(task.getUserId())
+                .groupId(task.getGroupId())
+                .isCompleted(task.isCompleted())
                 .build();
     }
 }

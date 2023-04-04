@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.TaskDto;
+import rest.eon.models.Group;
 import rest.eon.models.Task;
 import rest.eon.models.User;
+import rest.eon.services.GroupService;
 import rest.eon.services.TaskService;
 import rest.eon.services.UserService;
 import java.util.ArrayList;
@@ -24,25 +26,28 @@ public class TaskController {
     final static Logger logger = LoggerFactory.getLogger(TaskController.class);
     final private TaskService taskService;
     final private UserService userService;
-
+    final private GroupService groupService;
 
     @GetMapping()
-    public List<Task> fetchTasks() {
-        String currentUserEmail = SecurityUtil.getSessionUser();
-        User user = userService.getUserByEmail(currentUserEmail).get();
-        logger.info("fetched all the tasks");
-        List<Task> tasks = new ArrayList<>();
-        user.getTasks().forEach(t -> tasks.add(taskService.getTaskById(t).get()));
-        return tasks;
+    List<Task> fetchTasks() {
+        return getTasks(null);
+    }
+
+    @GetMapping("/{group_id}")
+    List<Task> fetchTasksFromGroup(@PathVariable String group_id) {
+        return getTasks(group_id);
     }
 
     @PostMapping()
     ResponseEntity<Task> createTask(@Valid @RequestBody TaskDto task) {
-        String currentUserEmail = SecurityUtil.getSessionUser();
-        task.setUserId(userService.getUserIdByEmail(currentUserEmail).get().getId());
-        Task createdTask = taskService.save(taskService.mapToTask(task));
-        if (createdTask != null) return ResponseEntity.ok(createdTask);
-        else return null;
+        return addNewTask(task,null);
+    }
+
+    @PostMapping("/{group_id}")
+    ResponseEntity<?> createTaskInGroup(@Valid @RequestBody TaskDto task, @PathVariable String group_id) {
+        if(userNotGroupAdmin(groupService.getGroupById(group_id).get()))
+            return new ResponseEntity<>("Such a group not found",HttpStatus.FORBIDDEN);
+        return addNewTask(task,group_id);
     }
 
     @PutMapping("/{id}")
@@ -68,4 +73,34 @@ public class TaskController {
 
     }
 
+
+    private ResponseEntity<Task> addNewTask(TaskDto task,String group_id) {
+        String currentUserEmail = SecurityUtil.getSessionUser();
+        task.setUserId(userService.getUserIdByEmail(currentUserEmail).get().getId());
+        task.setGroupId(group_id);
+        task.setCompleted(false);
+        Task createdTask = taskService.save(taskService.mapToTask(task));
+        if (createdTask != null) return ResponseEntity.ok(createdTask);
+        else return null;
+    }
+
+    private boolean userNotGroupAdmin(Group currentGroup) {
+        return !currentGroup.getAdmins().contains(userService.getUserByEmail(SecurityUtil.getSessionUser()).get().getId());
+    }
+
+    private List<Task> getTasks(String group_id) {
+        String currentUserEmail = SecurityUtil.getSessionUser();
+        User user = userService.getUserByEmail(currentUserEmail).get();
+        List<Task> tasks = new ArrayList<>();
+        if(group_id!=null){
+            user.getTasks().forEach(t ->{
+                Task cur=taskService.getTaskById(t).get();
+                if(cur.getGroupId()!=null && cur.getGroupId().equals(group_id))
+                    tasks.add(taskService.getTaskById(t).get());
+            } );
+        }
+        else
+            user.getTasks().forEach(t -> tasks.add(taskService.getTaskById(t).get()));
+        return tasks;
+    }
 }

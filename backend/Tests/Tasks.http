@@ -3,8 +3,8 @@ POST http://localhost:8080/auth/authenticate
 Content-Type: application/json
 
 {
-  "email": "kk@email.ru",
-  "password": "123"
+  "email":"ivan@email.ru",
+  "password":"12345678"
 }
 
 > {%
@@ -19,13 +19,26 @@ GET http://localhost:8080/tasks
 Authorization: Bearer {{auth_token}}
 
 ###
+GET http://localhost:8080/tasks/642beccf8fc793357ab7a9d8
+Authorization: Bearer {{auth_token}}
+
+###
 POST http://localhost:8080/tasks
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "date": "2023-05-11T14:00:00Z",
+  "date": "2023-07-11T16:00:00Z",
   "title": "shopping"
+}
+###
+POST http://localhost:8080/tasks/642beccf8fc793357ab7a9d8
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "date": "2023-05-11T13:00:00Z",
+  "title": "do homework"
 }
 ###
 PUT http://localhost:8080/tasks/642a91666dd75105070ced36
@@ -36,6 +49,7 @@ Authorization: Bearer {{auth_token}}
 "date": "2023-05-01T14:00:00Z",
 "title": "running"
 }
+
 
 ###
 DELETE http://localhost:8080/tasks/642a91666dd75105070ced36

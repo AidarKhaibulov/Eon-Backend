@@ -3,10 +3,10 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "nickname":"avvv",
-  "firstname":"vasua",
-  "lastname":"User",
-  "email":"ddf@email.ru",
+  "nickname":"asdfas",
+  "firstname":"Ira",
+  "lastname":"Dimko",
+  "email":"asdssf@email.ru",
   "password":"12345678"
 }
 ###
@@ -14,6 +14,8 @@ POST http://localhost:8080/auth/authenticate
 Content-Type: application/json
 
 {
-"email":"d@email.ru",
-"password":"demopass"
+  "email":"ivan@email.ru",
+  "password":"12345678"
 }
+###
+GET http://localhost:8080/auth/isTokenValid/eyJhbGciOiJIUzINiJ9.eyJzdWIiOiJpdmFuQGVtYWlsLnJ1IiwiaWF0IjoxNjgwNjIyNTM0LCJleHAiOjE2ODA2NDQxMzR9.BHdWGcSy0yE_d1RBVw90rrT3WUIhne7iuw3-_ByDOsg

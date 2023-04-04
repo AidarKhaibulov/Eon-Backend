@@ -19,5 +19,6 @@ public class TaskDto {
     private String title;
     private String userId;
     private String groupId;
+    private boolean isCompleted;
 
 }

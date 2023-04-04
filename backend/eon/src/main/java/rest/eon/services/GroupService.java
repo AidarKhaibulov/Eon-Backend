@@ -12,4 +12,6 @@ public interface GroupService {
     Group mapToGroup(GroupDto dto);
 
     Optional<Group> getGroupById(String id);
+
+    void delete(String id);
 }

@@ -3,11 +3,15 @@ POST http://localhost:8080/auth/authenticate
 Content-Type: application/json
 
 {
-  "email":"ddf@email.ru",
+  "email":"ivan@email.ru",
   "password":"12345678"
 }
 
 > {% client.global.set("auth_token", response.body.token);%}
+###
+GET http://localhost:8080/groups
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 ###
 POST http://localhost:8080/groups
@@ -15,7 +19,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "name":"123"
+  "name":"class"
 }
 
 ###
@@ -26,4 +30,14 @@ Authorization: Bearer {{auth_token}}
 {
   "name":"lol"
 }
+###
+DELETE http://localhost:8080/groups/642be4fc2c3af6341b43ea43
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+###
+POST http://localhost:8080/groups/642beccf8fc793357ab7a9d8/addMember/642bfe28552bfd2d434a8896
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
 
