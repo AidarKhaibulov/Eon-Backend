@@ -39,7 +39,7 @@ public class GroupController {
     }
 
     @GetMapping()
-    List<Group> fetchGroups() {
+    List<Group> fetchAdministratedGroups() {
         String currentUserEmail = SecurityUtil.getSessionUser();
         User user = userService.getUserByEmail(currentUserEmail).get();
         List<Group> groups = new ArrayList<>();

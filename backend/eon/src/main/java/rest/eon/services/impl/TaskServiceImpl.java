@@ -12,6 +12,7 @@ import rest.eon.services.TaskService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -51,10 +52,13 @@ public class TaskServiceImpl implements TaskService {
     public void delete(String id) {
         User currentUser = userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
         List<String> currentTasks = currentUser.getTasks();
-        currentTasks.remove(currentTasks.stream().findFirst().filter(t->t.equals(id)).get());
-        currentUser.setTasks(currentTasks);
-        userRepository.save(currentUser);
-        taskRepository.deleteById(id);
+        if(currentTasks.contains(id)) {
+            currentTasks.remove(id);
+            currentUser.setTasks(currentTasks);
+            userRepository.save(currentUser);
+            taskRepository.deleteById(id);
+        }
+        else throw new NoSuchElementException();
     }
 
     @Override

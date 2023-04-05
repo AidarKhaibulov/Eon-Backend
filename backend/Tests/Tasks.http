@@ -16,11 +16,21 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/tasks
+Content-Type: application/json
 Authorization: Bearer {{auth_token}}
+
+{
+  "sortedMethod": ""
+}
 
 ###
 GET http://localhost:8080/tasks/642beccf8fc793357ab7a9d8
+Content-Type: application/json
 Authorization: Bearer {{auth_token}}
+
+{
+  "sortedMethod": ""
+}
 
 ###
 POST http://localhost:8080/tasks
@@ -28,7 +38,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "date": "2023-07-11T16:00:00Z",
+  "date": "2023-01-11T16:00:00Z",
   "title": "shopping"
 }
 ###
@@ -52,6 +62,6 @@ Authorization: Bearer {{auth_token}}
 
 
 ###
-DELETE http://localhost:8080/tasks/642a91666dd75105070ced36
+DELETE http://localhost:8080/tasks/642c67f134829d24954c7536
 Authorization: Bearer {{auth_token}}
 

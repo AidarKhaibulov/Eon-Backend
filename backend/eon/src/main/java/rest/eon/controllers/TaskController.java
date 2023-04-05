@@ -1,6 +1,10 @@
 package rest.eon.controllers;
 
+import com.mongodb.client.model.Collation;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +19,10 @@ import rest.eon.models.User;
 import rest.eon.services.GroupService;
 import rest.eon.services.TaskService;
 import rest.eon.services.UserService;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
+
+import static com.mongodb.client.model.Sorts.ascending;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController()
@@ -27,15 +33,27 @@ public class TaskController {
     final private TaskService taskService;
     final private UserService userService;
     final private GroupService groupService;
-
+    @Data
+    @AllArgsConstructor
+    static
+    class TaskOptions{
+        private String sortingMethod;
+        private String dateStart;
+        private String dateFinish;
+    }
     @GetMapping()
-    List<Task> fetchTasks() {
-        return getTasks(null);
+    List<Task> fetchTasks(@RequestBody TaskOptions options) {
+        List<Task> l= getTasks(null);
+        Collections.sort(l, Comparator.comparing(Task::getDate));
+        //Collections.sort(l, (a,b)->b.getDate().compareTo(a.getDate()));
+        return l;
     }
 
     @GetMapping("/{group_id}")
-    List<Task> fetchTasksFromGroup(@PathVariable String group_id) {
-        return getTasks(group_id);
+    List<Task> fetchTasksFromGroup(@RequestBody TaskOptions options,@PathVariable String group_id) {
+        List<Task> l= getTasks(group_id);
+        Collections.sort(l, Comparator.comparing(Task::getDate));
+        return l;
     }
 
     @PostMapping()
@@ -64,13 +82,17 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteTask(@PathVariable String id) {
-        Task taskToDelete = taskService.getTaskById(id).orElse(null);
-        if (taskToDelete == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        else {
-            taskService.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            Task taskToDelete = taskService.getTaskById(id).orElse(null);
+            if (taskToDelete == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            else {
+                taskService.delete(id);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         }
-
+        catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
