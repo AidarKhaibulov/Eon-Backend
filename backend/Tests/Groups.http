@@ -30,14 +30,22 @@ Authorization: Bearer {{auth_token}}
 {
   "name":"club"
 }
-###
+### Delete group
 DELETE http://localhost:8080/groups/642be4fc2c3af6341b43ea43
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
-###
-POST http://localhost:8080/groups/642d3da8f172c8790a4a6416/addMember/642bfe28552bfd2d434a8896
+### Delete members from group
+DELETE http://localhost:8080/groups/642d3da8f172c8790a4a6416/deleteMembers
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
+["642bed748fc793357ab7a9d9"]
+
+### Add members
+POST http://localhost:8080/groups/642d3da8f172c8790a4a6416/addMembers
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+["642bed748fc793357ab7a9d9","642bfe28552bfd2d434a8896"]
 

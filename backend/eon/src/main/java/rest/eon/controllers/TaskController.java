@@ -45,7 +45,6 @@ public class TaskController {
         //Collections.sort(l, (a,b)->b.getDate().compareTo(a.getDate()));
         return l;
     }
-
     /**
      * @param group_id from where to fetch tasks
      * @return all tasks from specified group

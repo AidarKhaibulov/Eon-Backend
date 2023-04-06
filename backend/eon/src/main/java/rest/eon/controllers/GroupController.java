@@ -43,7 +43,7 @@ public class GroupController {
         String currentUserEmail = SecurityUtil.getSessionUser();
         User user = userService.getUserByEmail(currentUserEmail).get();
         List<Group> groups = new ArrayList<>();
-        if(user.getAdminGroups()!=null)
+        if (user.getAdminGroups() != null)
             user.getAdminGroups().forEach(g -> groups.add(groupService.getGroupById(g).get()));
         return groups;
     }
@@ -57,38 +57,12 @@ public class GroupController {
         else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/{group_id}/addMember/{user_id}")
-    ResponseEntity<?> addMember(@PathVariable String group_id, @PathVariable String user_id) {
-        Group currentGroup = groupService.getGroupById(group_id).orElse(null);
-        User u = userService.getUserByEmail(SecurityUtil.getSessionUser()).get();
-
-        if (currentGroup == null) return NotFoundEntity();
-        else {
-            if (userNotGroupAdmin(currentGroup)) return NotFoundEntity();
-            if (userService.getUserById(user_id).isEmpty())
-                return new ResponseEntity<>("Such a user not found", HttpStatus.FORBIDDEN);
-
-            List<String> userGroups = u.getAdminGroups();
-            if (userGroups == null || userGroups.stream().noneMatch(x -> x.equals(group_id))) return NotFoundEntity();
-            else {
-                List<String> members = currentGroup.getMembers();
-                if (members == null) members = new ArrayList<>();
-                if (!members.contains(user_id)) members.add(user_id);
-                currentGroup.setMembers(members);
-
-                User member = userService.getUserById(user_id).get();
-                HashSet<String> memberList;
-                if (member.getMembershipGroups() != null) {
-                    memberList = new HashSet<>(member.getMembershipGroups());
-                    memberList.add(group_id);
-                } else memberList = new HashSet<>(Collections.singleton(group_id));
-                member.setMembershipGroups(new ArrayList<>(memberList));
-                userService.save(member);
-
-                return ResponseEntity.ok(groupService.save(currentGroup));
-            }
-        }
+    @PostMapping("/{group_id}/addMembers")
+    ResponseEntity<?> addMembers(@Valid @RequestBody List<String> users, @PathVariable String group_id) {
+        return addMemberToGroup(group_id, users);
     }
+
+
 
     @PutMapping("/{id}")
     ResponseEntity<?> editGroup(@Valid @RequestBody GroupDto group, @PathVariable String id) {
@@ -118,5 +92,76 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
+    }
+
+    @DeleteMapping("/{group_id}/deleteMembers")
+    ResponseEntity<?> deleteMembers(@Valid @RequestBody List<String> users, @PathVariable String group_id) {
+        return deleteMembersFromGroup(group_id,users);
+    }
+
+    private ResponseEntity<?> deleteMembersFromGroup(String groupId, List<String> users) {
+        Group currentGroup = groupService.getGroupById(groupId).orElse(null);
+        User u = userService.getUserByEmail(SecurityUtil.getSessionUser()).get();
+
+        if (currentGroup == null) return NotFoundEntity();
+        else {
+            if (userNotGroupAdmin(currentGroup)) return NotFoundEntity();
+            for (String userId : users) {
+
+                User member=userService.getUserById(userId).orElse(null);
+                if (member==null || member.getMembershipGroups()==null || !member.getMembershipGroups().contains(groupId) )
+                    return new ResponseEntity<>("Provided user not found in this group", HttpStatus.FORBIDDEN);
+
+                if(userId.equals(u.getId()))
+                    return new ResponseEntity<>("Cannot delete yourself from group", HttpStatus.FORBIDDEN);
+
+                // handling user's groups list
+                List<String> memberList = member.getMembershipGroups();
+                memberList.remove(groupId);
+                member.setMembershipGroups(memberList);
+                userService.save(member);
+
+                // handling group's members list
+                List<String> members = currentGroup.getMembers();
+                members.remove(userId);
+                currentGroup.setMembers(members);
+                groupService.save(currentGroup);
+            }
+            return ResponseEntity.ok(groupService.getGroupById(currentGroup.getId()));
+        }
+    }
+
+    private ResponseEntity<?> addMemberToGroup(String group_id, List<String> user_ids) {
+        Group currentGroup = groupService.getGroupById(group_id).orElse(null);
+        User u = userService.getUserByEmail(SecurityUtil.getSessionUser()).get();
+
+        if (currentGroup == null) return NotFoundEntity();
+        else {
+            if (userNotGroupAdmin(currentGroup)) return NotFoundEntity();
+            for (String user_id : user_ids) {
+
+                if (userService.getUserById(user_id).isEmpty())
+                    return new ResponseEntity<>("Provided user not found", HttpStatus.FORBIDDEN);
+
+                // handling group's members list
+                List<String> members = currentGroup.getMembers();
+                if (members == null) members = new ArrayList<>();
+                if (!members.contains(user_id)) members.add(user_id);
+                currentGroup.setMembers(members);
+                groupService.save(currentGroup);
+
+                // handling user's groups list
+                User member = userService.getUserById(user_id).get();
+                HashSet<String> memberList;
+                if (member.getMembershipGroups() != null) {
+                    memberList = new HashSet<>(member.getMembershipGroups());
+                    memberList.add(group_id);
+                } else memberList = new HashSet<>(Collections.singleton(group_id));
+                member.setMembershipGroups(new ArrayList<>(memberList));
+                userService.save(member);
+
+            }
+            return ResponseEntity.ok(groupService.getGroupById(currentGroup.getId()));
+        }
     }
 }
