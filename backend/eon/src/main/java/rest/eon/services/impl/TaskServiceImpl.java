@@ -10,6 +10,8 @@ import rest.eon.repositories.TaskRepository;
 import rest.eon.repositories.UserRepository;
 import rest.eon.services.TaskService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,8 +33,23 @@ public class TaskServiceImpl implements TaskService {
         List<String> currentUserTasks = new ArrayList<>();
         if (currentUser.getTasks() != null) {
             currentUser.getTasks().stream().forEach(t->currentUserTasks.add(getTaskById(t).get().getId()));
-            for (var o : currentUserTasks) {
-                if (getTaskById(o).get().getDate().equals(task.getDate()))
+
+            // checking if time of new task isn't already taken
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+            LocalDateTime taskTimeStart=LocalDateTime.parse(task.getDateStart(),formatter);
+            LocalDateTime taskTimeFinish=LocalDateTime.parse(task.getDateFinish(),formatter);
+            for (var t : currentUserTasks) {
+                Task cur=taskRepository.findById(t).get();
+                LocalDateTime tTimeStart=LocalDateTime.parse(cur.getDateStart(),formatter);
+                LocalDateTime tTimeFinish=LocalDateTime.parse(cur.getDateFinish(),formatter);
+                // check if new task time doesn't interrupt existing task's times
+                if (!cur.isCompleted() &&
+                        ( (tTimeStart.isBefore(taskTimeStart) && tTimeFinish.isAfter(taskTimeStart)) ||
+                         (tTimeStart.isBefore(taskTimeFinish) && tTimeFinish.isAfter(taskTimeFinish))  ||
+                        tTimeStart.isEqual(taskTimeFinish) || tTimeStart.isEqual(taskTimeStart) ||
+                                tTimeFinish.isEqual(taskTimeFinish) || tTimeFinish.isEqual(taskTimeStart))
+                )
                     return null;
             }
         }
@@ -66,7 +83,8 @@ public class TaskServiceImpl implements TaskService {
         return Task.builder()
                 .id(taskDto.getId())
                 .title(taskDto.getTitle())
-                .date(taskDto.getDate())
+                .dateStart(taskDto.getDateStart())
+                .dateFinish(taskDto.getDateFinish())
                 .userId(taskDto.getUserId())
                 .groupId(taskDto.getGroupId())
                 .isCompleted(taskDto.isCompleted())
@@ -78,10 +96,16 @@ public class TaskServiceImpl implements TaskService {
         return TaskDto.builder()
                 .id(task.getId())
                 .title(task.getTitle())
-                .date(task.getDate())
+                .dateStart(task.getDateStart())
+                .dateFinish(task.getDateFinish())
                 .userId(task.getUserId())
                 .groupId(task.getGroupId())
                 .isCompleted(task.isCompleted())
                 .build();
+    }
+
+    @Override
+    public Task update(Task task) {
+        return taskRepository.save(task);
     }
 }

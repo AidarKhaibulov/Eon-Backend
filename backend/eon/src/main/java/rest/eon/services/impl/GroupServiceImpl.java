@@ -41,11 +41,13 @@ public class GroupServiceImpl implements GroupService {
                 .name(dto.getName())
                 .members(dto.getMembers())
                 .admins(dto.getAdmins())
+                .tasks(dto.getTasks())
                 .build();
     }
 
     @Override
     public Optional<Group> getGroupById(String id) {
+
         return groupRepository.findById(id);
     }
 

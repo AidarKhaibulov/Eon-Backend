@@ -16,5 +16,6 @@ public class GroupDto {
     private String name;
     private List<String > members;
     private List<String > admins;
+    private List<String > tasks;
 
 }

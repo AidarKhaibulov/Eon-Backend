@@ -17,4 +17,6 @@ public interface TaskService{
     Task mapToTask(TaskDto taskDto);
 
     TaskDto mapToTaskDto(Task task);
+
+    Task update(Task task);
 }

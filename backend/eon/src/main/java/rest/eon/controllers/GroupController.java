@@ -43,7 +43,8 @@ public class GroupController {
         String currentUserEmail = SecurityUtil.getSessionUser();
         User user = userService.getUserByEmail(currentUserEmail).get();
         List<Group> groups = new ArrayList<>();
-        user.getAdminGroups().forEach(g -> groups.add(groupService.getGroupById(g).get()));
+        if(user.getAdminGroups()!=null)
+            user.getAdminGroups().forEach(g -> groups.add(groupService.getGroupById(g).get()));
         return groups;
     }
 

@@ -20,11 +20,10 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "sortedMethod": ""
 }
 
 ###
-GET http://localhost:8080/tasks/642beccf8fc793357ab7a9d8
+GET http://localhost:8080/tasks/642d3da8f172c8790a4a6416
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -32,36 +31,43 @@ Authorization: Bearer {{auth_token}}
   "sortedMethod": ""
 }
 
-###
+### Add new task
 POST http://localhost:8080/tasks
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "date": "2023-01-11T16:00:00Z",
+  "dateStart": "2023-01-01T14:00:00Z",
+  "dateFinish": "2023-01-01T16:00:00Z",
   "title": "shopping"
 }
 ###
-POST http://localhost:8080/tasks/642beccf8fc793357ab7a9d8
+POST http://localhost:8080/tasks/642d3da8f172c8790a4a6416
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "date": "2023-05-11T13:00:00Z",
-  "title": "do homework"
+  "date": "2023-01-11T13:00:00Z",
+  "title": "do project"
 }
 ###
-PUT http://localhost:8080/tasks/642a91666dd75105070ced36
+PUT http://localhost:8080/tasks/642d40a1917a3c7fd5401064
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-"date": "2023-05-01T14:00:00Z",
-"title": "running"
+"dateStart": "2023-02-01T14:00:00Z",
+  "dateFinish": "2023-02-01T15:00:00Z",
+"title": "class"
 }
+
+### FINISH TASK
+PUT http://localhost:8080/tasks/finish/642dd01918a84a701c89b81b
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 
 ###
-DELETE http://localhost:8080/tasks/642c67f134829d24954c7536
+DELETE http://localhost:8080/tasks/642dce080eb4335980f435d3
 Authorization: Bearer {{auth_token}}
 

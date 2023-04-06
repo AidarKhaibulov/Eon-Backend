@@ -5,15 +5,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @Document("tasks")
 public class Task {
     @Id
     private String id;
-    private String date;
+    private String dateStart;
+    private String dateFinish;
     private String title;
     private String userId;
     private String groupId;

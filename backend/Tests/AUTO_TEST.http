@@ -75,7 +75,8 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "date": "2023-05-11T14:00:00Z",
+  "dateStart": "2023-05-11T14:00:00Z",
+  "dateFinish": "2023-05-11T15:00:00Z",
   "title": "shopping"
 }
 > {%
@@ -90,7 +91,8 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "date": "2023-05-01T14:00:00Z",
+  "dateStart": "2023-05-01T14:00:00Z",
+  "dateFinish": "2023-05-11T15:00:00Z",
   "title": "running"
 }
 > {%
@@ -101,7 +103,12 @@ Authorization: Bearer {{auth_token}}
 
 ### Get task
 GET http://localhost:8080/tasks
+Content-Type: application/json
 Authorization: Bearer {{auth_token}}
+
+{
+
+}
 
 > {%
     client.test("SUCCESS!", function() {

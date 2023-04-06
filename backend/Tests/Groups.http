@@ -23,12 +23,12 @@ Authorization: Bearer {{auth_token}}
 }
 
 ###
-PUT http://localhost:8080/groups/642afe6a08c8c75d30999179
+PUT http://localhost:8080/groups/642d3da8f172c8790a4a6416
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "name":"lol"
+  "name":"club"
 }
 ###
 DELETE http://localhost:8080/groups/642be4fc2c3af6341b43ea43
@@ -36,7 +36,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 ###
-POST http://localhost:8080/groups/642beccf8fc793357ab7a9d8/addMember/642bfe28552bfd2d434a8896
+POST http://localhost:8080/groups/642d3da8f172c8790a4a6416/addMember/642bfe28552bfd2d434a8896
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
