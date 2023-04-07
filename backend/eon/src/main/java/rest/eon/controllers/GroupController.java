@@ -62,8 +62,6 @@ public class GroupController {
         return addMemberToGroup(group_id, users);
     }
 
-
-
     @PutMapping("/{id}")
     ResponseEntity<?> editGroup(@Valid @RequestBody GroupDto group, @PathVariable String id) {
         Group currentGroup = groupService.getGroupById(id).orElse(null);
@@ -96,7 +94,7 @@ public class GroupController {
 
     @DeleteMapping("/{group_id}/deleteMembers")
     ResponseEntity<?> deleteMembers(@Valid @RequestBody List<String> users, @PathVariable String group_id) {
-        return deleteMembersFromGroup(group_id,users);
+        return deleteMembersFromGroup(group_id, users);
     }
 
     private ResponseEntity<?> deleteMembersFromGroup(String groupId, List<String> users) {
@@ -108,11 +106,11 @@ public class GroupController {
             if (userNotGroupAdmin(currentGroup)) return NotFoundEntity();
             for (String userId : users) {
 
-                User member=userService.getUserById(userId).orElse(null);
-                if (member==null || member.getMembershipGroups()==null || !member.getMembershipGroups().contains(groupId) )
+                User member = userService.getUserById(userId).orElse(null);
+                if (member == null || member.getMembershipGroups() == null || !member.getMembershipGroups().contains(groupId))
                     return new ResponseEntity<>("Provided user not found in this group", HttpStatus.FORBIDDEN);
 
-                if(userId.equals(u.getId()))
+                if (userId.equals(u.getId()))
                     return new ResponseEntity<>("Cannot delete yourself from group", HttpStatus.FORBIDDEN);
 
                 // handling user's groups list
