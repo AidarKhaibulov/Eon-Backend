@@ -30,6 +30,8 @@ public class User implements UserDetails {
     private List<String> membershipGroups;
     private List<String> adminGroups;
 
+    private List<String> tokens;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority((role)));

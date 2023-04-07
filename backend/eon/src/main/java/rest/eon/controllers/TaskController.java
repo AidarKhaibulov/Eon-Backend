@@ -17,6 +17,7 @@ import rest.eon.models.User;
 import rest.eon.services.GroupService;
 import rest.eon.services.TaskService;
 import rest.eon.services.UserService;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -40,11 +41,16 @@ public class TaskController {
      */
     @GetMapping()
     List<Task> fetchTasks(@RequestBody TaskOptions options) {
-        List<Task> l = getTasks(null);
+        //List<Task> l = getTasks(null);
+
+        List<Task> l=taskService.getTasks(null, options.dateStart, options.dateFinish);
         l.sort(Comparator.comparing(Task::getDateStart));
         //Collections.sort(l, (a,b)->b.getDate().compareTo(a.getDate()));
+
+
         return l;
     }
+
     /**
      * @param group_id from where to fetch tasks
      * @return all tasks from specified group
@@ -69,12 +75,12 @@ public class TaskController {
     }
 
     @PutMapping("/finish/{task_id}")
-    ResponseEntity<?> finishTask(@PathVariable String task_id){
-        Task t=taskService.getTaskById(task_id).get();
+    ResponseEntity<?> finishTask(@PathVariable String task_id) {
+        Task t = taskService.getTaskById(task_id).get();
         String currentUserEmail = SecurityUtil.getSessionUser();
-        User u=userService.getUserByEmail(userService.getUserByEmail(currentUserEmail).get().getEmail()).get();
+        User u = userService.getUserByEmail(userService.getUserByEmail(currentUserEmail).get().getEmail()).get();
 
-        if(!u.getTasks().contains(task_id)) return NotFoundEntity();
+        if (!u.getTasks().contains(task_id)) return NotFoundEntity();
 
         t.setCompleted(true);
         return ResponseEntity.ok(taskService.update(t));
@@ -112,7 +118,7 @@ public class TaskController {
         // checking if start time < finish time, or they are equal
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
         LocalDateTime start = LocalDateTime.parse(task.getDateStart(), formatter);
-        LocalDateTime finish = LocalDateTime.parse(task.getDateFinish(),formatter);
+        LocalDateTime finish = LocalDateTime.parse(task.getDateFinish(), formatter);
 
         if (start.isAfter(finish) || start.equals(finish)) return null;
         String currentUserEmail = SecurityUtil.getSessionUser();

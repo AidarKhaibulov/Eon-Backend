@@ -134,3 +134,5 @@ Authorization: Bearer {{auth_token}}
         client.assert(response.status === 200, "Response status is not 200");
     });
 %}
+
+### Logout

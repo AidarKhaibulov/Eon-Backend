@@ -20,6 +20,8 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
+  "dateStart": "2023-04-01T16:00:00Z",
+  "dateFinish": "2023-05-01T16:00:00Z"
 }
 
 ###
