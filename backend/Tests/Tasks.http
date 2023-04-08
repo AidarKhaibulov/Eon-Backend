@@ -14,23 +14,26 @@ Content-Type: application/json
     client.global.set("auth_token", response.body.token);
 %}
 
-###
+### Get all tasks
 GET http://localhost:8080/tasks
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "dateStart": "2023-04-01T16:00:00Z",
-  "dateFinish": "2023-05-01T16:00:00Z"
+  "sortingMethod": "defaultDesc",
+  "dateStart": "2023-01-01T09:00:00Z",
+  "dateFinish": "2023-07-01T16:00:00Z"
 }
 
-###
+### Get tasks from group
 GET http://localhost:8080/tasks/642d3da8f172c8790a4a6416
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "sortedMethod": ""
+
+  "dateStart": "2023-01-01T09:00:00Z",
+  "dateFinish": "2023-06-01T16:00:00Z"
 }
 
 ### Add new task

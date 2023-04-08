@@ -41,13 +41,8 @@ public class TaskController {
      */
     @GetMapping()
     List<Task> fetchTasks(@RequestBody TaskOptions options) {
-        //List<Task> l = getTasks(null);
-
         List<Task> l=taskService.getTasks(null, options.dateStart, options.dateFinish);
-        l.sort(Comparator.comparing(Task::getDateStart));
-        //Collections.sort(l, (a,b)->b.getDate().compareTo(a.getDate()));
-
-
+        taskService.sortTasks(l,options.sortingMethod);
         return l;
     }
 
@@ -57,8 +52,8 @@ public class TaskController {
      */
     @GetMapping("/{group_id}")
     List<Task> fetchTasksFromGroup(@RequestBody TaskOptions options, @PathVariable String group_id) {
-        List<Task> l = getTasks(group_id);
-        l.sort(Comparator.comparing(Task::getDateStart));
+        List<Task> l = taskService.getTasks(group_id, options.dateStart, options.dateFinish);
+        taskService.sortTasks(l,options.sortingMethod);
         return l;
     }
 
@@ -147,42 +142,6 @@ public class TaskController {
 
     private boolean userNotGroupAdmin(Group currentGroup) {
         return !currentGroup.getAdmins().contains(userService.getUserByEmail(SecurityUtil.getSessionUser()).get().getId());
-    }
-
-    private List<Task> getTasks(String group_id) {
-        String currentUserEmail = SecurityUtil.getSessionUser();
-        User user = userService.getUserByEmail(currentUserEmail).get();
-        List<Task> tasks;
-
-        // case when need to return only task from specified group
-        if (group_id != null) {
-            tasks = new ArrayList<>();
-
-            // fetching those tasks which user created in group as administrator
-            if (user.getTasks() != null)
-                user.getTasks().forEach(t -> {
-                    Task cur = taskService.getTaskById(t).get();
-                    if (cur.getGroupId() != null && cur.getGroupId().equals(group_id))
-                        tasks.add(taskService.getTaskById(t).get());
-                });
-
-                // fetching those tasks which user has in group as member
-            else if (user.getMembershipGroups() != null && user.getMembershipGroups().contains(group_id)) {
-                Group g = groupService.getGroupById(group_id).get();
-                g.getTasks().forEach(t -> tasks.add(taskService.getTaskById(t).get()));
-            }
-
-            //else return []
-
-        }
-
-        // case when need to return all the tasks
-        else {
-            tasks = new ArrayList<>();
-            if (user.getTasks() != null)
-                user.getTasks().forEach(t -> tasks.add(taskService.getTaskById(t).get()));
-        }
-        return tasks;
     }
 
     @Data

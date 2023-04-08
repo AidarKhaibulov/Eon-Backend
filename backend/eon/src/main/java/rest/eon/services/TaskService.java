@@ -1,5 +1,6 @@
 package rest.eon.services;
 
+import rest.eon.controllers.TaskController;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.Task;
 
@@ -23,4 +24,6 @@ public interface TaskService{
 
 
     List<Task> getTasks(String group_id, String start, String finish);
+
+    void sortTasks(List<Task> l, String method);
 }
