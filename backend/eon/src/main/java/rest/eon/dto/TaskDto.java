@@ -22,5 +22,8 @@ public class TaskDto {
     @Null
     private String groupId;
     private boolean isCompleted;
+    private String assignedTo;
+    private String notificationId;
+
 
 }

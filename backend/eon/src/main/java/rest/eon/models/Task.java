@@ -1,9 +1,10 @@
 package rest.eon.models;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import lombok.Builder;
 
 @Data
 @Builder
@@ -17,5 +18,11 @@ public class Task {
     private String userId;
     private String groupId;
     private boolean isCompleted;
+
+    /**
+     * Represents user id which current task assigned to
+     */
+    private String assignedTo;
+    private String notificationId;
 
 }

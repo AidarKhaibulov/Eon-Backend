@@ -1,6 +1,7 @@
 package rest.eon.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.TaskDto;
@@ -12,6 +13,7 @@ import rest.eon.repositories.TaskRepository;
 import rest.eon.repositories.UserRepository;
 import rest.eon.services.TaskService;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -26,6 +28,11 @@ public class TaskServiceImpl implements TaskService {
 
     public List<Task> getAll() {
         return taskRepository.findAll();
+    }
+
+    public List<Task> getRelevantTasksWithEnabledNotifications(){
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new java.util.Date());
+        return taskRepository.findAllByNotificationIdIsNotNullAndDateStartIsGreaterThan(timeStamp);
     }
 
     @Override
@@ -44,6 +51,7 @@ public class TaskServiceImpl implements TaskService {
                 Task cur = taskRepository.findById(t).get();
                 LocalDateTime tTimeStart = LocalDateTime.parse(cur.getDateStart(), formatter);
                 LocalDateTime tTimeFinish = LocalDateTime.parse(cur.getDateFinish(), formatter);
+
                 // check if new task time doesn't interrupt existing task's times
                 if (!cur.isCompleted() &&
                         ((tTimeStart.isBefore(taskTimeStart) && tTimeFinish.isAfter(taskTimeStart)) ||
@@ -88,24 +96,34 @@ public class TaskServiceImpl implements TaskService {
                 .userId(taskDto.getUserId())
                 .groupId(taskDto.getGroupId())
                 .isCompleted(taskDto.isCompleted())
-                .build();
-    }
-
-    @Override
-    public TaskDto mapToTaskDto(Task task) {
-        return TaskDto.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .dateStart(task.getDateStart())
-                .dateFinish(task.getDateFinish())
-                .userId(task.getUserId())
-                .groupId(task.getGroupId())
-                .isCompleted(task.isCompleted())
+                .assignedTo(taskDto.getAssignedTo())
+                .notificationId(taskDto.getNotificationId())
                 .build();
     }
 
     @Override
     public Task update(Task task) {
+        // check edited task time doesn't interrupt existing tasks time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        User u = userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
+        LocalDateTime taskTimeStart = LocalDateTime.parse(task.getDateStart(), formatter);
+        LocalDateTime taskTimeFinish = LocalDateTime.parse(task.getDateFinish(), formatter);
+        if (u.getTasks() != null)
+            for (var t : u.getTasks()) {
+                Task cur = taskRepository.findById(t).get();
+                LocalDateTime tTimeStart = LocalDateTime.parse(cur.getDateStart(), formatter);
+                LocalDateTime tTimeFinish = LocalDateTime.parse(cur.getDateFinish(), formatter);
+
+                // check if new task time doesn't interrupt existing task's times
+                if (!cur.isCompleted() &&
+                        ((tTimeStart.isBefore(taskTimeStart) && tTimeFinish.isAfter(taskTimeStart)) ||
+                                (tTimeStart.isBefore(taskTimeFinish) && tTimeFinish.isAfter(taskTimeFinish)) ||
+                                tTimeStart.isEqual(taskTimeFinish) || tTimeStart.isEqual(taskTimeStart) ||
+                                tTimeFinish.isEqual(taskTimeFinish) || tTimeFinish.isEqual(taskTimeStart))
+                )
+                    return null;
+            }
+
         return taskRepository.save(task);
     }
 
@@ -174,11 +192,14 @@ public class TaskServiceImpl implements TaskService {
             case "name" -> l.sort(Comparator.comparing(Task::getTitle));
             case "nameDesc" -> l.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
             case "day" -> l.sort(Comparator.comparing(a -> a.getDateStart().substring(8, 10)));
-            case "dayDesc" -> l.sort((a, b) -> b.getDateStart().substring(8, 10).compareTo(a.getDateStart().substring(8, 10)));
-            case "Month" -> l.sort(Comparator.comparing(a -> a.getDateStart().substring(5, 7)));
-            case "MonthDesc" -> l.sort((a, b) -> b.getDateStart().substring(5, 7).compareTo(a.getDateStart().substring(5, 7)));
-            case "Year" -> l.sort(Comparator.comparing(a -> a.getDateStart().substring(0, 4)));
-            case "YearDesc" -> l.sort((a, b) -> b.getDateStart().substring(0, 4).compareTo(a.getDateStart().substring(0, 4)));
+            case "dayDesc" ->
+                    l.sort((a, b) -> b.getDateStart().substring(8, 10).compareTo(a.getDateStart().substring(8, 10)));
+            case "month" -> l.sort(Comparator.comparing(a -> a.getDateStart().substring(5, 7)));
+            case "monthDesc" ->
+                    l.sort((a, b) -> b.getDateStart().substring(5, 7).compareTo(a.getDateStart().substring(5, 7)));
+            case "year" -> l.sort(Comparator.comparing(a -> a.getDateStart().substring(0, 4)));
+            case "yearDesc" ->
+                    l.sort((a, b) -> b.getDateStart().substring(0, 4).compareTo(a.getDateStart().substring(0, 4)));
         }
     }
 
@@ -193,5 +214,38 @@ public class TaskServiceImpl implements TaskService {
         return ((cStart.isAfter(s) || cStart.isEqual(s)) &&
                 (cFinish.isBefore(f) || cFinish.isEqual(f)));
     }
+
+    @Override
+    public ResponseEntity<Task> addNewTask(TaskDto task, String group_id) {
+        // checking if start time < finish time, or they are equal
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        LocalDateTime start = LocalDateTime.parse(task.getDateStart(), formatter);
+        LocalDateTime finish = LocalDateTime.parse(task.getDateFinish(), formatter);
+
+        if (start.isAfter(finish) || start.equals(finish)) return null;
+        String currentUserEmail = SecurityUtil.getSessionUser();
+        task.setUserId(userRepository.findByEmail(currentUserEmail).get().getId());
+        task.setGroupId(group_id);
+        task.setCompleted(false);
+        task.setNotificationId(task.getNotificationId());
+        Task createdTask = save(mapToTask(task));
+
+        // updating group's task field
+        if (group_id != null) {
+            Group g = groupRepository.findById(group_id).get();
+            HashSet<String> tasks;
+            if (g.getTasks() == null)
+                tasks = new HashSet<>(Collections.singleton(createdTask.getId()));
+            else {
+                tasks = new HashSet<>(g.getTasks());
+                tasks.add(createdTask.getId());
+            }
+            g.setTasks(new ArrayList<>(tasks));
+            groupRepository.save(g);
+        }
+
+        return ResponseEntity.ok(createdTask);
+    }
+
 
 }

@@ -59,14 +59,14 @@ public class TaskController {
 
     @PostMapping()
     ResponseEntity<Task> createTask(@Valid @RequestBody TaskDto task) {
-        return addNewTask(task, null);
+        return taskService.addNewTask(task, null);
     }
 
     @PostMapping("/{group_id}")
     ResponseEntity<?> createTaskInGroup(@Valid @RequestBody TaskDto task, @PathVariable String group_id) {
         if (userNotGroupAdmin(groupService.getGroupById(group_id).get()))
             return new ResponseEntity<>("Such a group not found", HttpStatus.FORBIDDEN);
-        return addNewTask(task, group_id);
+        return taskService.addNewTask(task, group_id);
     }
 
     @PutMapping("/finish/{task_id}")
@@ -109,36 +109,6 @@ public class TaskController {
         }
     }
 
-    private ResponseEntity<Task> addNewTask(TaskDto task, String group_id) {
-        // checking if start time < finish time, or they are equal
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        LocalDateTime start = LocalDateTime.parse(task.getDateStart(), formatter);
-        LocalDateTime finish = LocalDateTime.parse(task.getDateFinish(), formatter);
-
-        if (start.isAfter(finish) || start.equals(finish)) return null;
-        String currentUserEmail = SecurityUtil.getSessionUser();
-        task.setUserId(userService.getUserIdByEmail(currentUserEmail).get().getId());
-        task.setGroupId(group_id);
-        task.setCompleted(false);
-        Task createdTask = taskService.save(taskService.mapToTask(task));
-
-        // updating group's task field
-        if (group_id != null) {
-            Group g = groupService.getGroupById(group_id).get();
-            HashSet<String> tasks;
-            if (g.getTasks() == null)
-                tasks = new HashSet<>(Collections.singleton(createdTask.getId()));
-            else {
-                tasks = new HashSet<>(g.getTasks());
-                tasks.add(createdTask.getId());
-            }
-            g.setTasks(new ArrayList<>(tasks));
-            groupService.save(g);
-        }
-
-        if (createdTask != null) return ResponseEntity.ok(createdTask);
-        else return null;
-    }
 
     private boolean userNotGroupAdmin(Group currentGroup) {
         return !currentGroup.getAdmins().contains(userService.getUserByEmail(SecurityUtil.getSessionUser()).get().getId());

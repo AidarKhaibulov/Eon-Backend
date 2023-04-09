@@ -2,6 +2,8 @@ package rest.eon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import rest.eon.services.impl.UserNotificationService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +12,7 @@ import java.io.InputStreamReader;
 
 @SpringBootApplication
 public class EonApplication {
-     public static String JWT_SECRET_KEY="";
+    public static String JWT_SECRET_KEY = "";
 
     public static void main(String[] args) throws IOException {
         try (
@@ -18,12 +20,14 @@ public class EonApplication {
         ) {
             assert is1 != null;
             try (BufferedReader reader1 = new BufferedReader(new InputStreamReader(is1))
-            )
-            {
-                JWT_SECRET_KEY=reader1.readLine();
+            ) {
+                JWT_SECRET_KEY = reader1.readLine();
             }
         }
-        SpringApplication.run(EonApplication.class, args);
+        ApplicationContext applicationContext = SpringApplication.run(EonApplication.class, args);
 
+        UserNotificationService service = applicationContext.getBean(UserNotificationService.class);
+        service.taskChecking();
     }
+
 }

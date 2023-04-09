@@ -1,5 +1,6 @@
 package rest.eon.services;
 
+import org.springframework.http.ResponseEntity;
 import rest.eon.controllers.TaskController;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.Task;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 public interface TaskService{
     List<Task> getAll();
+    List<Task> getRelevantTasksWithEnabledNotifications();
     Task save(Task task);
 
     Optional<Task> getTaskById(String id);
@@ -18,7 +20,6 @@ public interface TaskService{
 
     Task mapToTask(TaskDto taskDto);
 
-    TaskDto mapToTaskDto(Task task);
 
     Task update(Task task);
 
@@ -26,4 +27,6 @@ public interface TaskService{
     List<Task> getTasks(String group_id, String start, String finish);
 
     void sortTasks(List<Task> l, String method);
+
+    ResponseEntity<Task> addNewTask(TaskDto task, String group_id);
 }
