@@ -9,6 +9,7 @@ Eon is a simple time management platform that allows users to easily control the
 * Customized access denied handling
 * NoSql integration
 * Email sending via SMTP
+* User custom notifications
 * Bean validation via DTO layer
 
 
