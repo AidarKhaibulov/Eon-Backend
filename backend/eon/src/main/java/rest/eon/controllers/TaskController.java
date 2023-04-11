@@ -10,16 +10,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rest.eon.auth.SecurityUtil;
+import rest.eon.dto.NotificationDto;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.Group;
+import rest.eon.models.Notification;
 import rest.eon.models.Task;
 import rest.eon.models.User;
 import rest.eon.services.GroupService;
+import rest.eon.services.NotificationService;
 import rest.eon.services.TaskService;
 import rest.eon.services.UserService;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
@@ -31,8 +32,9 @@ public class TaskController {
     final private TaskService taskService;
     final private UserService userService;
     final private GroupService groupService;
+    final private NotificationService notificationService;
 
-    private static ResponseEntity<String> NotFoundEntity() {
+    private static ResponseEntity<String> TaskNotFound() {
         return new ResponseEntity<>("Such a task not found", HttpStatus.FORBIDDEN);
     }
 
@@ -75,17 +77,18 @@ public class TaskController {
         String currentUserEmail = SecurityUtil.getSessionUser();
         User u = userService.getUserByEmail(userService.getUserByEmail(currentUserEmail).get().getEmail()).get();
 
-        if (!u.getTasks().contains(task_id)) return NotFoundEntity();
+        if (!u.getTasks().contains(task_id)) return TaskNotFound();
 
         t.setCompleted(true);
         return ResponseEntity.ok(taskService.update(t));
     }
 
+
     @PutMapping("/{id}")
     ResponseEntity<?> editTask(@Valid @RequestBody TaskDto newTask, @PathVariable String id) {
         String currentUserEmail = SecurityUtil.getSessionUser();
         if (!userService.getUserByEmail(currentUserEmail).get().getTasks().contains(id))
-            return NotFoundEntity();
+            return TaskNotFound();
         return taskService.getTaskById(id).map(task -> {
             task.setDateStart(newTask.getDateStart());
             task.setDateFinish(newTask.getDateFinish());
@@ -93,6 +96,27 @@ public class TaskController {
             logger.info("Task with id " + id + " has been updated!");
             return ResponseEntity.ok(taskService.update(task));
         }).orElseGet(() -> ResponseEntity.ok(taskService.save(taskService.mapToTask(newTask))));
+    }
+
+    @PutMapping("/{task_id}/setNotification")
+    ResponseEntity<?> setNotificationToTask(@Valid @RequestBody NotificationDto newNotification, @PathVariable String task_id) {
+        String currentUserEmail = SecurityUtil.getSessionUser();
+        if (!userService.getUserByEmail(currentUserEmail).get().getTasks().contains(task_id))
+            return TaskNotFound();
+
+        // evaluating minutes for notification from different date units types
+        int minutes = 0;
+        switch (newNotification.getUnitsType()){
+            case "days"-> minutes=newNotification.getAlarmBefore()*24*60*60;
+            case "hours"-> minutes=newNotification.getAlarmBefore()*60;
+            case "minutes"-> minutes=newNotification.getAlarmBefore();
+        }
+        Notification toSave=Notification.builder()
+                .alarmBefore(String.valueOf(minutes))
+                .taskId(task_id)
+                .build();
+
+        return ResponseEntity.ok(notificationService.save(toSave));
     }
 
     @DeleteMapping("/{id}")

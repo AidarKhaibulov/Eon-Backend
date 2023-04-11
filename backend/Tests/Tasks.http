@@ -42,10 +42,9 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "dateStart": "2023-04-09T23:31:00Z",
-  "dateFinish": "2023-04-09T23:59:00Z",
-  "title": "aaaa",
-  "notificationId": "aaaa"
+  "dateStart": "2023-04-11T23:31:00Z",
+  "dateFinish": "2023-04-11T23:59:00Z",
+  "title": "workout"
 }
 ###
 POST http://localhost:8080/tasks/642d3da8f172c8790a4a6416
@@ -68,10 +67,19 @@ Authorization: Bearer {{auth_token}}
 }
 
 ### FINISH TASK
-PUT http://localhost:8080/tasks/finish/642dd01918a84a701c89b81b
+PUT http://localhost:8080/tasks/finish/6435105fd585040eb76b7c68
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
+### Set notification
+PUT http://localhost:8080/tasks/6435108ad585040eb76b7c69/setNotification
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+ "alarmBefore": "3",
+  "unitsType": "hours"
+}
 
 ###
 DELETE http://localhost:8080/tasks/64311aa4592b162873254229

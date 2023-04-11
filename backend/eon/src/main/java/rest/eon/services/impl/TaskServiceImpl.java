@@ -111,6 +111,11 @@ public class TaskServiceImpl implements TaskService {
         if (u.getTasks() != null)
             for (var t : u.getTasks()) {
                 Task cur = taskRepository.findById(t).get();
+
+                // case when we encounter currently edited task
+                if(cur.getId().equals(task.getId()))
+                    continue;
+
                 LocalDateTime tTimeStart = LocalDateTime.parse(cur.getDateStart(), formatter);
                 LocalDateTime tTimeFinish = LocalDateTime.parse(cur.getDateFinish(), formatter);
 
