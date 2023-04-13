@@ -24,5 +24,6 @@ public class Task {
      */
     private String assignedTo;
     private String notificationId;
+    private String repetitionId;
 
 }

@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @SpringBootApplication
 public class EonApplication {
@@ -26,6 +28,8 @@ public class EonApplication {
         }
         ApplicationContext applicationContext = SpringApplication.run(EonApplication.class, args);
 
+        System.out.println((LocalDate.parse("2023-04-13T19:30:00Z".substring(0,10)).getDayOfWeek()));
+        System.out.println(LocalTime.parse("2023-04-09T23:59:00Z".substring(11,16)));
         UserNotificationService service = applicationContext.getBean(UserNotificationService.class);
         service.taskChecking();
     }

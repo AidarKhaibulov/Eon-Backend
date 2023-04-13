@@ -42,8 +42,8 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "dateStart": "2023-04-11T23:31:00Z",
-  "dateFinish": "2023-04-11T23:59:00Z",
+  "dateStart": "2023-04-14T13:20:00Z",
+  "dateFinish": "2023-04-14T14:00:00Z",
   "title": "workout"
 }
 ###
@@ -56,13 +56,13 @@ Authorization: Bearer {{auth_token}}
   "title": "do project"
 }
 ### Edit task
-PUT http://localhost:8080/tasks/64314624667c5b379168283d
+PUT http://localhost:8080/tasks/64381bf235dfac4a0ed89d8a
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-"dateStart": "2023-01-08T14:00:00Z",
-  "dateFinish": "2023-01-08T15:00:00Z",
+"dateStart": "2023-04-13T23:31:00Z",
+  "dateFinish": "2023-04-13T23:40:00Z",
 "title": "class"
 }
 
@@ -80,6 +80,17 @@ Authorization: Bearer {{auth_token}}
  "alarmBefore": "3",
   "unitsType": "hours"
 }
+
+### Set repeat
+PUT http://localhost:8080/tasks/6435108ad585040eb76b7c69/setRepeat
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "repetitionDays": "12345",
+  "repetitionCount": "inf"
+}
+
 
 ###
 DELETE http://localhost:8080/tasks/64311aa4592b162873254229

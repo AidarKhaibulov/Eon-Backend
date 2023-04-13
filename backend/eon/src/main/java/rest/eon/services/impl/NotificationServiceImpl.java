@@ -20,8 +20,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final TaskService taskService;
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final NotificationRepository notificationRepository;
 
     @Override
