@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - 27020:27017
+    volumes:
+      - data:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MDB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MDB_PASSWORD}
+
+  app:
+    build:
+      context: services/app
+      dockerfile: Dockerfile
+    command: java -jar ./app.jar
+    environment:
+      PORT: 8080
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_USERNAME: ${MDB_USERNAME}
+      SPRING_DATA_MONGODB_PASSWORD: ${MDB_PASSWORD}
+
+      SPRING.MAIL.USERNAME: ${SMTP_USERNAME}
+      SPRING.MAIL.PASSWORD: ${SMTP_PASSWORD}
+    image: 'eon'
+    ports:
+      - 8091:8080
+    depends_on:
+      - mongodb
+volumes:
+  data: {}
+
+

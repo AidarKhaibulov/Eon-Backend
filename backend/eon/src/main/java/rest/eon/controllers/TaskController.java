@@ -12,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.NotificationDto;
-import rest.eon.dto.RepetitionDto;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.*;
 import rest.eon.services.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -124,15 +124,13 @@ public class TaskController {
 
 
     @PutMapping("/{taskId}/setRepeat")
-    ResponseEntity<?> setRepeatForTask(@Valid @RequestBody RepetitionDto newRepetition, @PathVariable String taskId) {
+    ResponseEntity<?> setRepeatForTask(@Valid @RequestBody List<String> newRepetition, @PathVariable String taskId) {
         String currentUserEmail = SecurityUtil.getSessionUser();
         if (!userService.getUserByEmail(currentUserEmail).get().getTasks().contains(taskId))
             return TaskNotFound();
 
-
         Repetition toSave = Repetition.builder()
-                .repetitionCount(newRepetition.getRepetitionCount())
-                .repetitionDays(newRepetition.getRepetitionDays())
+                .repetitionSchema(newRepetition)
                 .taskId(taskId)
                 .build();
         return ResponseEntity.ok(repetitionService.save(toSave));

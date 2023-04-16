@@ -1,5 +1,5 @@
 ###
-POST http://localhost:8080/auth/register
+POST http://localhost:8091/auth/register
 Content-Type: application/json
 
 {
@@ -10,12 +10,34 @@ Content-Type: application/json
   "password":"12345678"
 }
 ###
-POST http://localhost:8080/auth/authenticate
+POST http://localhost:8091/auth/authenticate
 Content-Type: application/json
 
 {
-  "email":"ivan@email.ru",
+  "email":"asdssf@email.ru",
   "password":"12345678"
 }
 ###
 GET http://localhost:8080/auth/isTokenValid/eyJhbGciOiJIUzINiJ9.eyJzdWIiOiJpdmFuQGVtYWlsLnJ1IiwiaWF0IjoxNjgwNjIyNTM0LCJleHAiOjE2ODA2NDQxMzR9.BHdWGcSy0yE_d1RBVw90rrT3WUIhne7iuw3-_ByDOsg
+
+
+### Get all tasks
+GET http://localhost:8091/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2Rzc2ZAZW1haWwucnUiLCJpYXQiOjE2ODE2NTYzMDgsImV4cCI6MTY4MTY3NzkwOH0.SqFGmYLVDHRr66Spp6KzwCTkxFn6UBpvOheGI1rE1mQ
+
+{
+  "sortingMethod": "defaultDesc"
+}
+
+### Add new task
+POST http://localhost:8091/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2Rzc2ZAZW1haWwucnUiLCJpYXQiOjE2ODE2NTYzMDgsImV4cCI6MTY4MTY3NzkwOH0.SqFGmYLVDHRr66Spp6KzwCTkxFn6UBpvOheGI1rE1mQ
+
+{
+  "dateStart": "2023-05-15T13:20:00Z",
+  "dateFinish": "2023-05-15T14:00:00Z",
+  "title": "workout",
+  "description": "some desc"
+}

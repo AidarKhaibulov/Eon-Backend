@@ -15,6 +15,7 @@ public class Task {
     private String dateStart;
     private String dateFinish;
     private String title;
+    private String description;
     private String userId;
     private String groupId;
     private boolean isCompleted;

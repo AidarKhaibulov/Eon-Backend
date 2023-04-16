@@ -6,15 +6,20 @@ import org.springframework.stereotype.Service;
 import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.Group;
+import rest.eon.models.Repetition;
 import rest.eon.models.Task;
 import rest.eon.models.User;
 import rest.eon.repositories.GroupRepository;
+import rest.eon.repositories.RepetitionRepository;
 import rest.eon.repositories.TaskRepository;
 import rest.eon.repositories.UserRepository;
 import rest.eon.services.TaskService;
 
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -24,6 +29,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final RepetitionRepository repetitionRepository;
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public List<Task> getAll() {
@@ -42,7 +48,7 @@ public class TaskServiceImpl implements TaskService {
         if (currentUser.getTasks() != null) {
             currentUser.getTasks().forEach(t -> currentUserTasks.add(getTaskById(t).get().getId()));
 
-            if (isCurrentTimeOverlapsExistingOnes(task, currentUserTasks)) return null;
+            if (isNewTaskTimeOverlapsExistingOnes(task, currentUserTasks)) return null;
 
         }
         Task savedTask = taskRepository.save(task);
@@ -52,53 +58,93 @@ public class TaskServiceImpl implements TaskService {
         return savedTask;
     }
 
-
     /**
      * Checks if time of {@currentTask} isn't already taken by existing tasks from {@tasks}
      */
-    private boolean NEWisCurrentTimeOverlapsExistingOnes(Task currentTask, List<String> tasks) {
+    private boolean isNewTaskTimeOverlapsExistingOnes(Task newTask, List<String> tasks) {
 
+        for (var t : tasks) {
+            Task old = taskRepository.findById(t).get();
+            if (twoTasksIntersect(newTask, old))
+                return true;
+        }
         return false;
-        /*// handle task with repetition
-        {
+
+    }
+
+    public boolean twoTasksIntersect(Task newT, Task oldT) {
+
+        LocalDateTime taskTimeStart = LocalDateTime.parse(newT.getDateStart(), format);
+        LocalDateTime taskTimeFinish = LocalDateTime.parse(newT.getDateFinish(), format);
+
+        LocalDateTime tTimeStart = LocalDateTime.parse(oldT.getDateStart(), format);
+        LocalDateTime tTimeFinish = LocalDateTime.parse(oldT.getDateFinish(), format);
+
+        // check if new task time doesn't interrupt existing task's times
+        if (!oldT.isCompleted() &&
+                ((tTimeStart.isBefore(taskTimeStart) && tTimeFinish.isAfter(taskTimeStart)) ||
+                        (tTimeStart.isBefore(taskTimeFinish) && tTimeFinish.isAfter(taskTimeFinish)) ||
+                        tTimeStart.isEqual(taskTimeFinish) || tTimeStart.isEqual(taskTimeStart) ||
+                        tTimeFinish.isEqual(taskTimeFinish) || tTimeFinish.isEqual(taskTimeStart)))
+            return true;
+
+        boolean isNewRepeatable = newT.getRepetitionId() != null;
+        boolean isOldRepeatable = oldT.getRepetitionId() != null;
+        // One of two tasks is repeatable or they both are
+        if (isNewRepeatable ||  isOldRepeatable) {
             // extract only time
-            LocalTime taskTimeStart = LocalTime.parse(currentTask.getDateStart().substring(11, 16));
-            LocalTime taskTimeFinish = LocalTime.parse(currentTask.getDateFinish().substring(11, 16));
-            //extract only day of week
-            DayOfWeek taskDayStart=LocalDate.parse(currentTask.getDateStart().substring(0,10)).getDayOfWeek();
-            DayOfWeek taskDayFinish=LocalDate.parse(currentTask.getDateFinish().substring(0,10)).getDayOfWeek();
-            for (var t : tasks) {
+            LocalTime newTimeStart = LocalTime.parse(newT.getDateStart().substring(11, 16));
+            LocalTime newTimeFinish = LocalTime.parse(newT.getDateFinish().substring(11, 16));
+            LocalTime oldTimeStart = LocalTime.parse(oldT.getDateStart().substring(11, 16));
+            LocalTime oldTimeFinish = LocalTime.parse(oldT.getDateFinish().substring(11, 16));
 
-                Task taskIth = taskRepository.findById(t).get();
-                LocalTime tTimeStart = LocalTime.parse(taskIth.getDateStart().substring(11, 16));
-                LocalTime tTimeFinish = LocalTime.parse(taskIth.getDateFinish().substring(11, 16));
+            // check only if times of these two tasks intersect
+            if ((newTimeStart.isBefore(oldTimeStart) && newTimeFinish.isAfter(oldTimeStart)) ||
+                            (newTimeStart.isBefore(oldTimeFinish) && newTimeFinish.isAfter(oldTimeFinish)) ||
+                    newTimeStart.equals(oldTimeFinish) || newTimeStart.equals(oldTimeStart) ||
+                    newTimeFinish.equals(oldTimeFinish) || newTimeFinish.equals(oldTimeStart))
+            {
+                // check if days of week intersect
+                List<String> forbiddenDaysForOld=null;
+                List<String> forbiddenDaysForNew=null;
+                // extracting already occupied days for both tasks
+                if(isNewRepeatable){
+                    Repetition rep=repetitionRepository.findById(newT.getRepetitionId()).get();
+                    forbiddenDaysForOld=rep.getRepetitionSchema();
+                }
+                else{
+                    Repetition rep=repetitionRepository.findById(oldT.getRepetitionId()).get();
+                    forbiddenDaysForNew=rep.getRepetitionSchema();
+                }
 
-                // if tasks are not intersected by time - pass
-                if (!taskIth.isCompleted() &&
-                        ((tTimeStart.isBefore(taskTimeStart) && tTimeFinish.isAfter(taskTimeStart)) ||
-                                (tTimeStart.isBefore(taskTimeFinish) && tTimeFinish.isAfter(taskTimeFinish)) ||
-                                tTimeStart.equals(taskTimeFinish) || tTimeStart.equals(taskTimeStart) ||
-                                tTimeFinish.equals(taskTimeFinish) || tTimeFinish.equals(taskTimeStart))) {
-                } else {
-                    // now check day of week
-                    DayOfWeek tDayStart=LocalDate.parse(taskIth.getDateStart().substring(0,10)).getDayOfWeek();
-                    DayOfWeek tDayFinish=LocalDate.parse(taskIth.getDateFinish().substring(0,10)).getDayOfWeek();
 
-                    // if days of week crosses - go farther
-                    if(taskDayStart.equals(tDayStart) ||
-                    taskDayStart.equals(tDayFinish)||
-                    taskDayFinish.equals(tDayStart)||
-                    taskDayFinish.equals(tDayFinish)){
-
-                        // if
-                    }
+                if(isNewRepeatable && !isOldRepeatable){
+                    DayOfWeek oldTDay=LocalDate.parse(oldT.getDateStart().substring(0,10)).getDayOfWeek();
+                    if(forbiddenDaysForOld.contains(oldTDay.toString()))
+                        return true;
+                }
+                else
+                if(!isNewRepeatable && isOldRepeatable){
+                    DayOfWeek newTDay= LocalDate.parse(newT.getDateStart().substring(0,10)).getDayOfWeek();
+                    if(forbiddenDaysForNew.contains(newTDay.toString()))
+                        return true;
+                }
+                // both tasks are repeatable
+                else{
+                    for(String dayI: forbiddenDaysForNew)
+                        for(String dayJ: forbiddenDaysForOld)
+                            if(dayJ.equals(dayI))
+                                return true;
                 }
             }
 
-        }*/
+        }
+
+        return false;
 
     }
-    private boolean isCurrentTimeOverlapsExistingOnes(Task currentTask, List<String> tasks) {
+
+   /* private boolean isNewTaskTimeOverlapsExistingOnes(Task currentTask, List<String> tasks) {
 
         LocalDateTime taskTimeStart = LocalDateTime.parse(currentTask.getDateStart(), format);
         LocalDateTime taskTimeFinish = LocalDateTime.parse(currentTask.getDateFinish(), format);
@@ -118,45 +164,7 @@ public class TaskServiceImpl implements TaskService {
         }
         return false;
 
-        /*// handle task with repetition
-        {
-            // extract only time
-            LocalTime taskTimeStart = LocalTime.parse(currentTask.getDateStart().substring(11, 16));
-            LocalTime taskTimeFinish = LocalTime.parse(currentTask.getDateFinish().substring(11, 16));
-            //extract only day of week
-            DayOfWeek taskDayStart=LocalDate.parse(currentTask.getDateStart().substring(0,10)).getDayOfWeek();
-            DayOfWeek taskDayFinish=LocalDate.parse(currentTask.getDateFinish().substring(0,10)).getDayOfWeek();
-            for (var t : tasks) {
-
-                Task taskIth = taskRepository.findById(t).get();
-                LocalTime tTimeStart = LocalTime.parse(taskIth.getDateStart().substring(11, 16));
-                LocalTime tTimeFinish = LocalTime.parse(taskIth.getDateFinish().substring(11, 16));
-
-                // if tasks are not intersected by time - pass
-                if (!taskIth.isCompleted() &&
-                        ((tTimeStart.isBefore(taskTimeStart) && tTimeFinish.isAfter(taskTimeStart)) ||
-                                (tTimeStart.isBefore(taskTimeFinish) && tTimeFinish.isAfter(taskTimeFinish)) ||
-                                tTimeStart.equals(taskTimeFinish) || tTimeStart.equals(taskTimeStart) ||
-                                tTimeFinish.equals(taskTimeFinish) || tTimeFinish.equals(taskTimeStart))) {
-                } else {
-                    // now check day of week
-                    DayOfWeek tDayStart=LocalDate.parse(taskIth.getDateStart().substring(0,10)).getDayOfWeek();
-                    DayOfWeek tDayFinish=LocalDate.parse(taskIth.getDateFinish().substring(0,10)).getDayOfWeek();
-
-                    // if days of week crosses - go farther
-                    if(taskDayStart.equals(tDayStart) ||
-                    taskDayStart.equals(tDayFinish)||
-                    taskDayFinish.equals(tDayStart)||
-                    taskDayFinish.equals(tDayFinish)){
-
-                        // if
-                    }
-                }
-            }
-
-        }*/
-
-    }
+    }*/
 
     @Override
     public Task update(Task task) {
@@ -168,7 +176,7 @@ public class TaskServiceImpl implements TaskService {
             // we need to remove current task from tasks list, because new task time interval can intersect old task time interval
             userTasks.remove(task.getId());
 
-            if (isCurrentTimeOverlapsExistingOnes(task, userTasks)) return null;
+            if (isNewTaskTimeOverlapsExistingOnes(task, userTasks)) return null;
         }
         return taskRepository.save(task);
 
@@ -193,7 +201,18 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task mapToTask(TaskDto taskDto) {
-        return Task.builder().id(taskDto.getId()).title(taskDto.getTitle()).dateStart(taskDto.getDateStart()).dateFinish(taskDto.getDateFinish()).userId(taskDto.getUserId()).groupId(taskDto.getGroupId()).isCompleted(taskDto.isCompleted()).assignedTo(taskDto.getAssignedTo()).notificationId(taskDto.getNotificationId()).build();
+        return Task.builder()
+                .id(taskDto.getId())
+                .description(taskDto.getDescription())
+                .title(taskDto.getTitle())
+                .dateStart(taskDto.getDateStart())
+                .dateFinish(taskDto.getDateFinish())
+                .userId(taskDto.getUserId())
+                .groupId(taskDto.getGroupId())
+                .isCompleted(taskDto.isCompleted())
+                .assignedTo(taskDto.getAssignedTo())
+                .notificationId(taskDto.getNotificationId())
+                .build();
     }
 
     @Override

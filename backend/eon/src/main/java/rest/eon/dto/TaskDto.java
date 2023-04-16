@@ -17,6 +17,9 @@ public class TaskDto {
     private String dateFinish;
     @NotEmpty(message = "Title should not be empty")
     private String title;
+    @NotEmpty(message = "Description should not be empty")
+    private String description;
+
     @Null
     private String userId;
     @Null

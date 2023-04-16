@@ -42,9 +42,10 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "dateStart": "2023-04-14T13:20:00Z",
-  "dateFinish": "2023-04-14T14:00:00Z",
-  "title": "workout"
+  "dateStart": "2023-05-15T13:20:00Z",
+  "dateFinish": "2023-05-15T14:00:00Z",
+  "title": "workout",
+  "description": "some desc"
 }
 ###
 POST http://localhost:8080/tasks/642d3da8f172c8790a4a6416
@@ -63,7 +64,8 @@ Authorization: Bearer {{auth_token}}
 {
 "dateStart": "2023-04-13T23:31:00Z",
   "dateFinish": "2023-04-13T23:40:00Z",
-"title": "class"
+"title": "class",
+  "description": "some desc"
 }
 
 ### FINISH TASK
@@ -72,7 +74,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 ### Set notification
-PUT http://localhost:8080/tasks/6435108ad585040eb76b7c69/setNotification
+PUT http://localhost:8080/tasks/643910d441f4ac4e3c3d11a8/setNotification
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -82,14 +84,12 @@ Authorization: Bearer {{auth_token}}
 }
 
 ### Set repeat
-PUT http://localhost:8080/tasks/6435108ad585040eb76b7c69/setRepeat
+PUT http://localhost:8080/tasks/643910d441f4ac4e3c3d11a8/setRepeat
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
-{
-  "repetitionDays": "12345",
-  "repetitionCount": "inf"
-}
+["MONDAY","SUNDAY"]
+
 
 
 ###
