@@ -1,0 +1,50 @@
+
+f	java:S117="QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(éìæŸ
+f	java:S117`"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äŒ¦¢
+l	java:S117„"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ë›±ùÿÿÿÿ
+l	java:S117„"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ë›±ùÿÿÿÿ
+g
+java:S3655˜"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Ò‰ì´
+f
+java:S3655V"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(¤¨¨°
+f
+java:S3655,"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(êã«
+f
+java:S3655f"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(¤¨¨°
+k
+java:S36556"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(”Î÷åúÿÿÿÿ
+k
+java:S3655I"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(°Ğ„€øÿÿÿÿ
+k
+java:S3655&"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(”ëıîùÿÿÿÿ
+g
+java:S3655†"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(¤¨¨°
+f
+java:S3655F"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(¤¨¨°
+H
+java:S3416"2Update this logger to use "GroupController.class".(¬ë…Ï
+[
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(¬ë…Ï
+`
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(¦§¿ƒûÿÿÿÿ
+[
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(æ¡¸ş
+`
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(‰ÎµŸûÿÿÿÿ
+h	java:S100!"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¬ÚÃ£üÿÿÿÿ
+<
+java:S1452="&Remove usage of generic wildcard type.(éìæŸ
+A
+java:S1452B"&Remove usage of generic wildcard type.(›¸€Üüÿÿÿÿ
+W
+java:S3457K"AFormat specifiers should be used instead of string concatenation.(¯­–
+<
+java:S1452R"&Remove usage of generic wildcard type.(‰Œ—
+<
+java:S1452`"&Remove usage of generic wildcard type.(äŒ¦¢
+n
+java:S3776„"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(Ë›±ùÿÿÿÿ
+L
+java:S1854†"5Remove this useless assignment to local variable "u".(¤¨¨°
+=
+java:S1481†"&Remove this unused "u" local variable.(¤¨¨°

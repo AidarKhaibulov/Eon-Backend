@@ -2,7 +2,7 @@
 Eon is a simple time management platform that allows users to easily control their time and plan schedule.
 
 # Features
-* REST API
+* REST API service
 * User registration and login with JWT authentication
 * Password encryption using BCrypt
 * Role-based authorization with Spring Security
@@ -24,6 +24,36 @@ Eon is a simple time management platform that allows users to easily control the
 * BCrypt
 * Gradle
 * MongoDB
+* Docker
+
+## How to use (via docker)
+Download .zip file with code, extract it, change directory to the root:
+```bash
+cd Agregator-master/Agregator-master
+```
+And create in root directory .env file with the following demo-credentials(notice that
+you have to provide your own smtp application credentials!):
+```text
+MDB_USERNAME=rootuser
+MDB_PASSWORD=rootpass
+SMTP_USERNAME=yourapplicationemail@somemail.com
+SMTP_PASSWORD=your_super_secret_password
+```
+
+
+Then run docker-compose.yml:
+```bash
+docker-compose up
+```
+Now application is available on **localhost:8091**
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
 
 
  
