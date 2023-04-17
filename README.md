@@ -26,13 +26,12 @@
 Каждый член команды будет вносить изменения в его личный документ-отчёт о проделанной работе в текущем спринте. После каждого спринта будет небольшой stand-up (обсуждение дальнейших действий). В документе-отчёте будет три колонки: «В планах», «В процессе», «Готово». Благодаря такому подходу эффективность каждого из участников команды будет наглядно видна. Отчёт будет заполняться по итогу выполнения каждого спринта.
 
 # Backend
-## How to use (via docker)
-Download .zip file with code, extract it, change directory to the root:
+## Как запускать (необходим Docker)
+Скачайте .zip файл, извлеките архив с кодом, переместитесь в корневую папку:
 ```bash
 cd Agregator-master/Agregator-master
 ```
-And create in root directory .env file with the following demo-credentials(notice that
-you have to provide your own smtp application credentials!):
+Создайте файл .env со следующими тестовыми данными(учтите, что пароли для SMTP приложения вам нужно ввести свои!):
 ```text
 MDB_USERNAME=rootuser
 MDB_PASSWORD=rootpass
@@ -41,14 +40,14 @@ SMTP_PASSWORD=your_super_secret_password
 ```
 
 
-Then run docker-compose.yml:
+Запуститите docker-compose.yml:
 ```bash
 docker-compose up
 ```
-Now application is available on **http://localhost:8091**
+Теперь сервер доступен на **http://localhost:8091**
 
-## Documentation
-API documentation will be available on url: http://localhost:8091/swagger-ui/index.html#/
+## Документация
+Документация API будет доступна по адресу: http://localhost:8091/swagger-ui/index.html#/
 
 ![image](https://user-images.githubusercontent.com/110534715/232393952-9f0d6626-2418-45ef-ab97-a4b94d5d18cd.png)
 
