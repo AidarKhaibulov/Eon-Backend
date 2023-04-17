@@ -24,3 +24,37 @@
 Каждый член команды в отчетной форме предоставляет информацию о пределанной работе. Продолжительность спринта будет точно указана после определения шагов при этапе разработки.
 
 Каждый член команды будет вносить изменения в его личный документ-отчёт о проделанной работе в текущем спринте. После каждого спринта будет небольшой stand-up (обсуждение дальнейших действий). В документе-отчёте будет три колонки: «В планах», «В процессе», «Готово». Благодаря такому подходу эффективность каждого из участников команды будет наглядно видна. Отчёт будет заполняться по итогу выполнения каждого спринта.
+
+# Backend
+## How to use (via docker)
+Download .zip file with code, extract it, change directory to the root:
+```bash
+cd Agregator-master/Agregator-master
+```
+And create in root directory .env file with the following demo-credentials(notice that
+you have to provide your own smtp application credentials!):
+```text
+MDB_USERNAME=rootuser
+MDB_PASSWORD=rootpass
+SMTP_USERNAME=yourapplicationemail@somemail.com
+SMTP_PASSWORD=your_super_secret_password
+```
+
+
+Then run docker-compose.yml:
+```bash
+docker-compose up
+```
+Now application is available on **http://localhost:8091**
+
+## Documentation
+API documentation will be available on url: http://localhost:8091/swagger-ui/index.html#/
+
+![image](https://user-images.githubusercontent.com/110534715/232393952-9f0d6626-2418-45ef-ab97-a4b94d5d18cd.png)
+
+
+
+
+
+ 
+ 
