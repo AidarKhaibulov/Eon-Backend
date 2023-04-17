@@ -1,7 +1,7 @@
 # Eon
 Eon is a simple time management platform that allows users to easily control their time and plan schedule.
 
-# Features
+## Features
 * REST API service
 * User registration and login with JWT authentication
 * Password encryption using BCrypt
@@ -17,7 +17,7 @@ Eon is a simple time management platform that allows users to easily control the
 * There is ability to add many users to group and delete many users from group.
 
 
-# Technologies
+## Technologies
 * Spring Boot 3.0
 * Spring Security
 * JSON Web Tokens (JWT)
@@ -46,6 +46,12 @@ Then run docker-compose.yml:
 docker-compose up
 ```
 Now application is available on **localhost:8091**
+
+## Documentation
+API documentation will be available on url: http://localhost:8091/swagger-ui/index.html#/
+
+![img.png](img.png)
+
 
 ## Contributing
 

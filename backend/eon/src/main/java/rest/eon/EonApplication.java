@@ -1,5 +1,7 @@
 package rest.eon;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @SpringBootApplication
+@OpenAPIDefinition(info = @Info(title = "EON", version = "0.666V", description = "Hello world from Eon api documentation. Have a nice day!"))
 public class EonApplication {
     public static String JWT_SECRET_KEY = "";
 

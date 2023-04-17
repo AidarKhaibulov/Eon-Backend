@@ -35,7 +35,10 @@ public class SecurityConfiguration {
                 .cors()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/auth/**","**/swagger-resources/**",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/webjars/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

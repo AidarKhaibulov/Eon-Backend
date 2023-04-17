@@ -1,5 +1,9 @@
 package rest.eon.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +20,6 @@ import rest.eon.dto.TaskDto;
 import rest.eon.models.*;
 import rest.eon.services.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,6 +27,7 @@ import java.util.NoSuchElementException;
 @RestController()
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
+@Tag(name = "Tasks", description = "Represents api methods for tasks")
 public class TaskController {
     final static Logger logger = LoggerFactory.getLogger(TaskController.class);
     final private TaskService taskService;
@@ -36,40 +40,55 @@ public class TaskController {
         return new ResponseEntity<>("Such a task not found", HttpStatus.FORBIDDEN);
     }
 
-    /**
-     * @return all tasks created by user, including those in groups
-     */
+    @Operation(summary = "Returns all the tasks created by user, including those in groups")
     @GetMapping()
-    List<Task> fetchTasks(@RequestBody TaskOptions options) {
+    List<Task> fetchTasks(@RequestBody
+                          @Parameter(name = "Sorting parameters", description = "Parameters for sorting tasks")
+                          TaskOptions options) {
         List<Task> l = taskService.getTasks(null, options.dateStart, options.dateFinish);
         taskService.sortTasks(l, options.sortingMethod);
         return l;
     }
 
-    /**
-     * @param groupId from where to fetch tasks
-     * @return all tasks from specified group
-     */
+    @Operation(summary = "Returns all tasks from specified group")
     @GetMapping("/{groupId}")
-    List<Task> fetchTasksFromGroup(@RequestBody TaskOptions options, @PathVariable String groupId) {
+    List<Task> fetchTasksFromGroup(@RequestBody
+                                   @Parameter(name = "Sorting parameters", description = "Parameters for sorting tasks")
+                                   TaskOptions options,
+
+                                   @PathVariable
+                                   @Parameter(description = "Specified group id")
+                                   String groupId) {
         List<Task> l = taskService.getTasks(groupId, options.dateStart, options.dateFinish);
         taskService.sortTasks(l, options.sortingMethod);
         return l;
     }
 
+    @Operation(summary = "Creates new task")
     @PostMapping()
-
-    ResponseEntity<Task> createTask(@Valid @RequestBody TaskDto task) {
+    ResponseEntity<Task> createTask(@Valid
+                                    @RequestBody
+                                    @Parameter(description = "New task")
+                                    TaskDto task) {
         return taskService.addNewTask(task, null);
     }
 
+    @Operation(summary = "Creates new task in specified group")
     @PostMapping("/{groupId}")
-    HttpEntity<?> createTaskInGroup(@Valid @RequestBody TaskDto task, @PathVariable String groupId) {
+    HttpEntity<?> createTaskInGroup(@Valid
+                                    @RequestBody
+                                    @Parameter(description = "New task")
+                                    TaskDto task,
+
+                                    @PathVariable
+                                    @Parameter(description = "Specified group")
+                                    String groupId) {
         if (userNotGroupAdmin(groupService.getGroupById(groupId).get()))
             return new ResponseEntity<>("Such a group not found", HttpStatus.FORBIDDEN);
         return taskService.addNewTask(task, groupId);
     }
 
+    @Operation(summary = "Finishes provided tasks")
     @PutMapping("/finish/{taskId}")
     ResponseEntity<?> finishTask(@PathVariable String taskId) {
         Task t = taskService.getTaskById(taskId).get();
@@ -83,8 +102,16 @@ public class TaskController {
     }
 
 
+    @Operation(summary = "Updates provided tasks")
     @PutMapping("/{id}")
-    ResponseEntity<?> editTask(@Valid @RequestBody TaskDto newTask, @PathVariable String id) {
+    ResponseEntity<?> editTask(@Valid
+                               @RequestBody
+                               @Parameter(description = "New task data without id")
+                               TaskDto newTask,
+
+                               @PathVariable
+                               @Parameter(description = "Id of edited task")
+                               String id) {
 
         //String ld = String.valueOf((LocalDate.parse(newTask.getDateFinish().substring(0, 10)).getDayOfWeek()));
 
@@ -95,13 +122,18 @@ public class TaskController {
             task.setDateStart(newTask.getDateStart());
             task.setDateFinish(newTask.getDateFinish());
             task.setTitle(newTask.getTitle());
-            logger.info("Task with id {0} has been updated!",id);
+            logger.info("Task with id {0} has been updated!", id);
             return ResponseEntity.ok(taskService.update(task));
         }).orElseGet(() -> ResponseEntity.ok(taskService.save(taskService.mapToTask(newTask))));
     }
 
+    @Operation(summary = "Set notification to provided task")
     @PutMapping("/{taskId}/setNotification")
-    ResponseEntity<?> setNotificationToTask(@Valid @RequestBody NotificationDto newNotification, @PathVariable String taskId) {
+    ResponseEntity<?> setNotificationToTask(@Valid @RequestBody
+                                            NotificationDto newNotification,
+
+                                            @PathVariable @Parameter(description = "Id of task which is set notification")
+                                            String taskId) {
         String currentUserEmail = SecurityUtil.getSessionUser();
         if (!userService.getUserByEmail(currentUserEmail).get().getTasks().contains(taskId))
             return TaskNotFound();
@@ -112,7 +144,7 @@ public class TaskController {
             case "days" -> minutes = newNotification.getAlarmBefore() * 24 * 60 * 60;
             case "hours" -> minutes = newNotification.getAlarmBefore() * 60;
             case "minutes" -> minutes = newNotification.getAlarmBefore();
-            default -> minutes=0;
+            default -> minutes = 0;
         }
         Notification toSave = Notification.builder()
                 .alarmBefore(String.valueOf(minutes))
@@ -122,9 +154,13 @@ public class TaskController {
         return ResponseEntity.ok(notificationService.save(toSave));
     }
 
-
+    @Operation(summary = "Set repetition to provided task")
     @PutMapping("/{taskId}/setRepeat")
-    ResponseEntity<?> setRepeatForTask(@Valid @RequestBody List<String> newRepetition, @PathVariable String taskId) {
+    ResponseEntity<?> setRepeatForTask(@Valid @RequestBody
+                                       List<String> newRepetition,
+
+                                       @PathVariable @Parameter(description = "Id of task which is set repetition")
+                                       String taskId) {
         String currentUserEmail = SecurityUtil.getSessionUser();
         if (!userService.getUserByEmail(currentUserEmail).get().getTasks().contains(taskId))
             return TaskNotFound();
@@ -136,7 +172,7 @@ public class TaskController {
         return ResponseEntity.ok(repetitionService.save(toSave));
     }
 
-
+    @Operation(summary = "Deletes provided task")
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteTask(@PathVariable String id) {
         try {
@@ -158,8 +194,21 @@ public class TaskController {
 
     @Data
     @AllArgsConstructor
+    @Schema(name = "Sorting parameters", description = "Parameters for sorting tasks")
     static
     class TaskOptions {
+        @Schema(description = """
+                default- sort by date in ascending order
+                defaultDesc- sort by date in descending order
+                day- sort by days in descending order
+                dayDesc- sort by days in descending order
+                month- sort by months in descending order
+                monthDesc- sort by months in descending order
+                year- sort by years in descending order
+                yearDesc- sort by years in descending order
+                name- sort by names in descending order
+                nameDesc- sort by names in descending order
+                """)
         private String sortingMethod;
         private String dateStart;
         private String dateFinish;
