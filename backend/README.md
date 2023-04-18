@@ -45,7 +45,7 @@ Then run docker-compose.yml:
 ```bash
 docker-compose up
 ```
-Now application is available on **localhost:8091**
+Now application is available on **http://localhost:8091**
 
 ## Documentation
 API documentation will be available on url: http://localhost:8091/swagger-ui/index.html#/
