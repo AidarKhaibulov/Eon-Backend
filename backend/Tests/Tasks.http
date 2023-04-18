@@ -25,6 +25,10 @@ Authorization: Bearer {{auth_token}}
   "dateFinish": "2023-07-01T16:00:00Z"
 }
 
+### Get all tasks via path variables
+GET http://localhost:8080/tasks/pv/2023-01-01T09:00:00Z/2023-07-01T16:00:00Z/defaultDesc
+Authorization: Bearer {{auth_token}}
+
 ### Get tasks from group
 GET http://localhost:8080/tasks/642d3da8f172c8790a4a6416
 Content-Type: application/json

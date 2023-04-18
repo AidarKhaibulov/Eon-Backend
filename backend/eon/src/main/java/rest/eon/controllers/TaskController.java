@@ -64,6 +64,28 @@ public class TaskController {
         return l;
     }
 
+    @Operation(summary = "Returns all the tasks created by user, including those in groups")
+    @GetMapping("/pv/{dateStart}/{dateFinish}/{sortingMethod}")
+    List<Task> fetchTasksViaPathVariables(@PathVariable String dateFinish,
+                                          @PathVariable String dateStart,
+                                          @PathVariable String sortingMethod) {
+        List<Task> l = taskService.getTasks(null, dateStart, dateFinish);
+        taskService.sortTasks(l, sortingMethod);
+        return l;
+    }
+
+    @Operation(summary = "Returns all tasks from specified group")
+    @GetMapping("/pv/{dateStart}/{dateFinish}/{sortingMethod}/{groupId}")
+    List<Task> fetchTasksFromGroupViaPathVariables(@PathVariable String dateStart,
+                                                   @PathVariable String dateFinish,
+                                                   @PathVariable String sortingMethod,
+                                                   @PathVariable String groupId
+                                                   ) {
+        List<Task> l = taskService.getTasks(groupId, dateStart, dateFinish);
+        taskService.sortTasks(l, sortingMethod);
+        return l;
+    }
+
     @Operation(summary = "Creates new task")
     @PostMapping()
     ResponseEntity<Task> createTask(@Valid

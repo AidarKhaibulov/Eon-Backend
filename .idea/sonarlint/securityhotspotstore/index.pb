@@ -123,11 +123,22 @@ w
 G.idea/sonarlint/issuestore/f/9/f9f3ec6b64fba94d5ad734a8fff8ffb5397bf3e2,4\9\49a9c7a6d8c050d2d04b8fdbb2a4a3471bd181c9
 @
 backend/eon/.env,d\d\dd1e5df24c023ff0bbb96d2645af865cedb46807
-H
-backend/Tests/Tasks.http,9\5\95ef55c6d2204917506ea1cceb8935c33b3dd767
 G
 backend/Tests/auth.http,4\9\49b3a1cce97729420f494b1c408a57224c1d8796
 N
 backend/eon/docker-compose.yml,6\3\63f244eb7b98d55bf625ab2eee5c083d6034d370
 L
 backend/Tests/AUTO_TEST.http,e\5\e581a3e1cebbcad683e6c65d3043cec4b529e740
+w
+Gbackend/eon/src/main/java/rest/eon/config/ApplicationConfiguration.java,a\9\a9d4bf7777ddf374c92c67e92c9ca46e668519ce
+f
+6backend/eon/src/main/java/rest/eon/EonApplication.java,0\5\05c271e467939ccfc7859914e1494d415b217c23
+c
+3backend/eon/src/main/java/rest/eon/dto/TaskDto.java,7\6\767fcd54bedef4c8bde97562606b912f54373c46
+A
+backend/README.md,6\6\6610930c2092e0f10b89932e6e99b7645897ce85
+t
+Dbackend/eon/src/main/java/rest/eon/config/SecurityConfiguration.java,c\f\cff96078c84437a9b3dea951621719afcd8c82c6
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
