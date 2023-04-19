@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .cors()
-                .and()
+                .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**","**/swagger-resources/**",
                         "/swagger-ui/**",

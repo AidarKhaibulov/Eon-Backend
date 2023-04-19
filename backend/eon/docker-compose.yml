@@ -28,6 +28,14 @@ services:
       - 8091:8080
     depends_on:
       - mongodb
+
+  cors:
+    build:
+      context: services/nginx
+      dockerfile: Dockerfile
+    container_name: cors
+    ports:
+      - "8080:80"
 volumes:
   data: {}
 
