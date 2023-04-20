@@ -133,8 +133,16 @@ c
 3backend/eon/src/main/java/rest/eon/dto/TaskDto.java,7\6\767fcd54bedef4c8bde97562606b912f54373c46
 f
 6backend/eon/src/main/java/rest/eon/EonApplication.java,0\5\05c271e467939ccfc7859914e1494d415b217c23
+A
+backend/README.md,6\6\6610930c2092e0f10b89932e6e99b7645897ce85
+H
+backend/Tests/Tasks.http,9\5\95ef55c6d2204917506ea1cceb8935c33b3dd767
+r
+Bbackend/eon/src/main/java/rest/eon/controllers/TaskController.java,e\c\ec0725653e89a94a1fa23c89fffc5710eb030dcd
+d
+4backend/eon/src/main/java/rest/eon/EmailDetails.java,e\6\e6981ba0172621d5502f60982523db6ded9f1a4e
+H
+backend/eon/build.gradle,3\c\3cf47779d971fd750d549850eb731b307c18c3ed
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
-A
-backend/README.md,6\6\6610930c2092e0f10b89932e6e99b7645897ce85
