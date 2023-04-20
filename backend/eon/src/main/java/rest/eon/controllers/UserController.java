@@ -14,7 +14,7 @@ import rest.eon.models.User;
 import rest.eon.services.UserService;
 
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
