@@ -23,7 +23,7 @@ import rest.eon.services.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController()
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
