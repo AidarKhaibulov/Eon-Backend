@@ -125,8 +125,6 @@ G.idea/sonarlint/issuestore/f/9/f9f3ec6b64fba94d5ad734a8fff8ffb5397bf3e2,4\9\49
 backend/eon/.env,d\d\dd1e5df24c023ff0bbb96d2645af865cedb46807
 G
 backend/Tests/auth.http,4\9\49b3a1cce97729420f494b1c408a57224c1d8796
-L
-backend/Tests/AUTO_TEST.http,e\5\e581a3e1cebbcad683e6c65d3043cec4b529e740
 w
 Gbackend/eon/src/main/java/rest/eon/config/ApplicationConfiguration.java,a\9\a9d4bf7777ddf374c92c67e92c9ca46e668519ce
 c
