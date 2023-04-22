@@ -1,0 +1,5 @@
+GET http://localhost:8080/user/findByName/Petya22
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuQGVtYWlsLnJ1IiwiaWF0IjoxNjgyMTU4Njg3LCJleHAiOjE2ODIxODAyODd9.No64ouFzN1Nxd1MOwNSzfRhvFDLr2uGZQg-Y_n1PgMM
+
+###
+GET http://localhost:8080/user

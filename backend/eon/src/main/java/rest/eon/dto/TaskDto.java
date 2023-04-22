@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Null;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 @Schema(description = "Task information")
@@ -25,6 +27,7 @@ public class TaskDto {
     @NotEmpty(message = "Description should not be empty")
     @Schema(description = "Task's description")
     private String description;
+    private List<String> photosUrl;
 
     @Null
     private String userId;

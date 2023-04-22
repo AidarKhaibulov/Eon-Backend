@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.NoSuchElementException;
 @RequestMapping("/user")
 @Tag(name = "Users", description = "Represents api methods for users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     final private UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -41,9 +43,11 @@ public class UserController {
     public ResponseEntity<?> findUserByNickname(@PathVariable String nickname) {
         try {
             User user = userService.findByNickname(nickname).orElseThrow();
+            log.info("User founded {}",user);
             return ResponseEntity.ok(user);
         }
         catch (NoSuchElementException e){
+            log.warn("User with {} nickname is not found", nickname);
             return UserNotFound();
         }
     }
@@ -56,6 +60,7 @@ public class UserController {
             user.setNickname(newUser.getNickname());
             user.setFirstname(newUser.getFirstname());
             user.setLastname(newUser.getLastname());
+            user.setPhotosUrl(newUser.getPhotosUrl());
             user.setPassword(passwordEncoder.encode(newUser.getPassword()));
             logger.info("Task with id " + user.getId() + " has been updated!");
             return ResponseEntity.ok(userService.save(user));

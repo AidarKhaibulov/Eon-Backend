@@ -28,6 +28,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role;
+    private List<String> photosUrl;
     private List<String> tasks;
     private List<String> membershipGroups;
     private List<String> adminGroups;

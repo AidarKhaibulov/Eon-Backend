@@ -24,7 +24,7 @@ GET http://localhost:8080/auth/isTokenValid/eyJhbGciOiJIUzINiJ9.eyJzdWIiOiJpdmFu
 ### Get all tasks
 GET http://localhost:8091/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2Rzc2ZAZW1haWwucnUiLCJpYXQiOjE2ODE2NTYzMDgsImV4cCI6MTY4MTY3NzkwOH0.SqFGmYLVDHRr66Spp6KzwCTkxFn6UBpvOheGI1rE1mQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2Rzc2ZAZW1haWwucnUiLCJpYXQiOjE2ODIwMTI2MTYsImV4cCI6MTY4MjAzNDIxNn0.XNlFjcz9GDoQ3DsLmhktnrZXjINIJAAZ2N23q-_uuHs
 
 {
   "sortingMethod": "defaultDesc"

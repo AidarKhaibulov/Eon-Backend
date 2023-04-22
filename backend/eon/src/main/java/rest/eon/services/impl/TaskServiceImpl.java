@@ -204,6 +204,7 @@ public class TaskServiceImpl implements TaskService {
         return Task.builder()
                 .id(taskDto.getId())
                 .description(taskDto.getDescription())
+                .photosUrl(taskDto.getPhotosUrl())
                 .title(taskDto.getTitle())
                 .dateStart(taskDto.getDateStart())
                 .dateFinish(taskDto.getDateFinish())
@@ -310,6 +311,7 @@ public class TaskServiceImpl implements TaskService {
         task.setGroupId(group_id);
         task.setCompleted(false);
         task.setNotificationId(task.getNotificationId());
+        task.setPhotosUrl(task.getPhotosUrl());
         Task createdTask = save(mapToTask(task));
 
         // updating group's task field

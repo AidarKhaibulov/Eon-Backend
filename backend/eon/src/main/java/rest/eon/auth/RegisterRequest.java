@@ -22,4 +22,6 @@ public class RegisterRequest {
     private String email;
     @Size(min=8,max=24,message="invalid password length")
     private String password;
+
+
 }

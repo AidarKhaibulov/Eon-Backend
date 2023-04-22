@@ -29,14 +29,14 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 @Tag(name = "Tasks", description = "Represents api methods for tasks")
 public class TaskController {
-    final static Logger logger = LoggerFactory.getLogger(TaskController.class);
-    final private TaskService taskService;
-    final private UserService userService;
-    final private GroupService groupService;
-    final private NotificationService notificationService;
-    final private RepetitionService repetitionService;
+    static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+    private final TaskService taskService;
+    private final UserService userService;
+    private final GroupService groupService;
+    private final NotificationService notificationService;
+    private final RepetitionService repetitionService;
 
-    private static ResponseEntity<String> TaskNotFound() {
+    private static ResponseEntity<String> taskNotFound() {
         return new ResponseEntity<>("Such a task not found", HttpStatus.FORBIDDEN);
     }
 
@@ -117,7 +117,7 @@ public class TaskController {
         String currentUserEmail = SecurityUtil.getSessionUser();
         User u = userService.getUserByEmail(userService.getUserByEmail(currentUserEmail).get().getEmail()).get();
 
-        if (!u.getTasks().contains(taskId)) return TaskNotFound();
+        if (!u.getTasks().contains(taskId)) return taskNotFound();
 
         t.setCompleted(true);
         return ResponseEntity.ok(taskService.update(t));
@@ -139,7 +139,7 @@ public class TaskController {
 
         String currentUserEmail = SecurityUtil.getSessionUser();
         if (!userService.getUserByEmail(currentUserEmail).get().getTasks().contains(id))
-            return TaskNotFound();
+            return taskNotFound();
         return taskService.getTaskById(id).map(task -> {
             task.setDateStart(newTask.getDateStart());
             task.setDateFinish(newTask.getDateFinish());
@@ -158,7 +158,7 @@ public class TaskController {
                                             String taskId) {
         String currentUserEmail = SecurityUtil.getSessionUser();
         if (!userService.getUserByEmail(currentUserEmail).get().getTasks().contains(taskId))
-            return TaskNotFound();
+            return taskNotFound();
 
         // evaluating minutes for notification from different date units types
         int minutes;
@@ -185,7 +185,7 @@ public class TaskController {
                                        String taskId) {
         String currentUserEmail = SecurityUtil.getSessionUser();
         if (!userService.getUserByEmail(currentUserEmail).get().getTasks().contains(taskId))
-            return TaskNotFound();
+            return taskNotFound();
 
         Repetition toSave = Repetition.builder()
                 .repetitionSchema(newRepetition)

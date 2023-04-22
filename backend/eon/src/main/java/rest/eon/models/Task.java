@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Builder
 @Document("tasks")
@@ -16,6 +18,7 @@ public class Task {
     private String dateFinish;
     private String title;
     private String description;
+    private List<String> photosUrl;
     private String userId;
     private String groupId;
     private boolean isCompleted;

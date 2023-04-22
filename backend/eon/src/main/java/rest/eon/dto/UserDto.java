@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class UserDto {
@@ -15,5 +17,6 @@ public class UserDto {
     private String firstname;
     @Size(min=2,max=24,message="invalid lastname length")
     private String lastname;
+    private List<String> photosUrl;
 
 }
