@@ -15,4 +15,6 @@ public interface UserService {
     void deleteByEmail(String email);
 
     Optional<User> getUserById(String userId);
+
+    Optional<User> findByNickname(String nickname);
 }

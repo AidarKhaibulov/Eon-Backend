@@ -1,5 +1,7 @@
 package rest.eon.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -13,20 +15,40 @@ import rest.eon.dto.UserDto;
 import rest.eon.models.User;
 import rest.eon.services.UserService;
 
+import java.util.NoSuchElementException;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/user")
+@Tag(name = "Users", description = "Represents api methods for users")
 @RequiredArgsConstructor
 public class UserController {
     final private UserService userService;
     private final PasswordEncoder passwordEncoder;
     final static Logger logger = LoggerFactory.getLogger(TaskController.class);
+    private static ResponseEntity<String> UserNotFound() {
+        return new ResponseEntity<>("Such a user not found", HttpStatus.BAD_REQUEST);
+    }
+    @Operation(summary = "Returns current user")
     @GetMapping()
     public User getUser() {
         return userService.getUserByEmail(SecurityUtil.getSessionUser()).get();
     }
 
+    @Operation(summary = "Find user by nickname")
+    @GetMapping("/findByName/{nickname}")
+    public ResponseEntity<?> findUserByNickname(@PathVariable String nickname) {
+        try {
+            User user = userService.findByNickname(nickname).orElseThrow();
+            return ResponseEntity.ok(user);
+        }
+        catch (NoSuchElementException e){
+            return UserNotFound();
+        }
+    }
+
+    @Operation(summary = "Edit current user")
     @PutMapping()
     ResponseEntity<User> editUser(@Valid @RequestBody UserDto newUser) {
         String email = SecurityUtil.getSessionUser();
@@ -40,6 +62,7 @@ public class UserController {
         }).get();
     }
 
+    @Operation(summary = "Delete current user")
     @DeleteMapping()
     ResponseEntity<?> deleteUser() {
         userService.deleteByEmail(SecurityUtil.getSessionUser());
