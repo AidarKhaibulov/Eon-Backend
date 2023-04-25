@@ -8,8 +8,18 @@ Content-Type: application/json
 }
 
 > {% client.global.set("auth_token", response.body.token);%}
-###
+### Get administrated groups
+GET http://localhost:8080/groups/administratedGroups
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+### Get all groups
 GET http://localhost:8080/groups
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+### Get group info groups
+GET http://localhost:8080/groups/info/6447d4f00c0cd4743305f77e
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -43,9 +53,9 @@ Authorization: Bearer {{auth_token}}
 ["642bed748fc793357ab7a9d9"]
 
 ### Add members
-POST http://localhost:8080/groups/642d3da8f172c8790a4a6416/addMembers
+POST http://localhost:8080/groups/6447d4f00c0cd4743305f77e/addMembers
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
-["642bed748fc793357ab7a9d9","642bfe28552bfd2d434a8896"]
+["642bebf27dc7615220d7d2a9"]
 

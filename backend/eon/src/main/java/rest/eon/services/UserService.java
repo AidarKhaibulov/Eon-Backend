@@ -1,6 +1,8 @@
 package rest.eon.services;
 
+import rest.eon.dto.ProfileInfo;
 import rest.eon.models.User;
+import rest.eon.services.impl.UserServiceImpl;
 
 import java.util.Optional;
 
@@ -16,5 +18,7 @@ public interface UserService {
 
     Optional<User> getUserById(String userId);
 
-    Optional<User> findByNickname(String nickname);
+   ProfileInfo findByNickname(String nickname);
+
+    ProfileInfo findById(String id);
 }

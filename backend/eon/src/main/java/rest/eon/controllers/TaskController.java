@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -20,6 +21,7 @@ import rest.eon.dto.TaskDto;
 import rest.eon.models.*;
 import rest.eon.services.*;
 
+import java.io.InvalidObjectException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -28,6 +30,7 @@ import java.util.NoSuchElementException;
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Tag(name = "Tasks", description = "Represents api methods for tasks")
+@Slf4j
 public class TaskController {
     static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final TaskService taskService;
@@ -91,8 +94,15 @@ public class TaskController {
     ResponseEntity<Task> createTask(@Valid
                                     @RequestBody
                                     @Parameter(description = "New task")
-                                    TaskDto task) {
-        return taskService.addNewTask(task, null);
+                                    TaskDto task)  {
+        try {
+            ResponseEntity<Task> response=taskService.addNewTask(task, null);
+            log.info("Task {} successfully added ",response.getBody().toString());
+            return response;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Operation(summary = "Creates new task in specified group")
@@ -101,10 +111,9 @@ public class TaskController {
                                     @RequestBody
                                     @Parameter(description = "New task")
                                     TaskDto task,
-
                                     @PathVariable
                                     @Parameter(description = "Specified group")
-                                    String groupId) {
+                                    String groupId) throws Exception {
         if (userNotGroupAdmin(groupService.getGroupById(groupId).get()))
             return new ResponseEntity<>("Such a group not found", HttpStatus.FORBIDDEN);
         return taskService.addNewTask(task, groupId);
@@ -146,7 +155,14 @@ public class TaskController {
             task.setTitle(newTask.getTitle());
             logger.info("Task with id {0} has been updated!", id);
             return ResponseEntity.ok(taskService.update(task));
-        }).orElseGet(() -> ResponseEntity.ok(taskService.save(taskService.mapToTask(newTask))));
+        }).orElseGet(() -> {
+            try {
+                return ResponseEntity.ok(taskService.save(taskService.mapToTask(newTask)));
+            } catch (InvalidObjectException e) {
+                log.error(e.getMessage());
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        });
     }
 
     @Operation(summary = "Set notification to provided task")

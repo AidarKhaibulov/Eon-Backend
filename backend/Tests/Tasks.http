@@ -46,11 +46,10 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "dateStart": "2023-01-22T13:20:00Z",
-  "dateFinish": "2023-01-22T14:00:00Z",
+  "dateStart": "2023-07-28T13:40:00Z",
+  "dateFinish": "2023-07-28T16:00:00Z",
   "title": "workout",
-  "description": "some desc",
-  "photosUrl": ["sdf","dfsdf"]
+  "description": "some desc"
 }
 ###
 POST http://localhost:8080/tasks/642d3da8f172c8790a4a6416

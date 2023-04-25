@@ -1,6 +1,9 @@
 package rest.eon.services.impl;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.stereotype.Service;
+import rest.eon.dto.ProfileInfo;
 import rest.eon.models.User;
 import rest.eon.repositories.UserRepository;
 import rest.eon.services.UserService;
@@ -41,7 +44,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
+    public ProfileInfo findByNickname(String nickname) {
+        return mapToProfileInfo(userRepository.findByNickname(nickname).orElseThrow());
+    }
+
+    @Override
+    public ProfileInfo findById(String id) {
+        return mapToProfileInfo(userRepository.findById(id).orElseThrow());
+    }
+    private ProfileInfo mapToProfileInfo(User user){
+        return ProfileInfo.builder()
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .nickname(user.getNickname())
+                .build();
     }
 }

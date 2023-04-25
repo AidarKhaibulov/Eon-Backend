@@ -1,5 +1,25 @@
-GET http://localhost:8080/user/findByName/Petya22
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFuQGVtYWlsLnJ1IiwiaWF0IjoxNjgyMTU4Njg3LCJleHAiOjE2ODIxODAyODd9.No64ouFzN1Nxd1MOwNSzfRhvFDLr2uGZQg-Y_n1PgMM
+### Authorization by token
+POST http://localhost:8080/auth/authenticate
+Content-Type: application/json
+
+{
+  "email":"ivan@email.ru",
+  "password":"12345678"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.global.set("auth_token", response.body.token);
+%}
+### Find user by id
+GET http://localhost:8080/user/findById/642bebf27dc7615220d7d2a9
+Authorization: Bearer {{auth_token}}
+
+### Find user by nickname
+GET http://localhost:8080/user/findByName/Ira
+Authorization: Bearer {{auth_token}}
 
 ###
 GET http://localhost:8080/user

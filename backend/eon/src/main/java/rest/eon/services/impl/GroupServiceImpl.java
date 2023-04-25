@@ -19,6 +19,18 @@ public class GroupServiceImpl implements GroupService {
     private final UserRepository userRepository;
 
     @Override
+    public List<String> getAllMembershipGroups(User user) {
+        return user.getMembershipGroups();
+    }
+
+    @Override
+    public Group getGroupInfoById(String groupId, User user) {
+       if( user.getAdminGroups().contains(groupId) || user.getMembershipGroups().contains(groupId))
+           return groupRepository.findById(groupId).orElseThrow();
+       throw new NoSuchElementException();
+    }
+
+    @Override
     public Group save(Group group) {
         Group newGroup = groupRepository.save(group);
 

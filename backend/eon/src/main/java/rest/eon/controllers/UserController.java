@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import rest.eon.auth.SecurityUtil;
+import rest.eon.dto.ProfileInfo;
 import rest.eon.dto.UserDto;
 import rest.eon.models.User;
 import rest.eon.services.UserService;
@@ -32,6 +33,7 @@ public class UserController {
     private static ResponseEntity<String> UserNotFound() {
         return new ResponseEntity<>("Such a user not found", HttpStatus.BAD_REQUEST);
     }
+
     @Operation(summary = "Returns current user")
     @GetMapping()
     public User getUser() {
@@ -42,7 +44,7 @@ public class UserController {
     @GetMapping("/findByName/{nickname}")
     public ResponseEntity<?> findUserByNickname(@PathVariable String nickname) {
         try {
-            User user = userService.findByNickname(nickname).orElseThrow();
+            ProfileInfo  user = userService.findByNickname(nickname);
             log.info("User founded {}",user);
             return ResponseEntity.ok(user);
         }
@@ -51,7 +53,19 @@ public class UserController {
             return UserNotFound();
         }
     }
-
+    @Operation(summary = "Find user by id")
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable String id) {
+        try {
+            ProfileInfo user = userService.findById(id);
+            log.info("User founded {}",user);
+            return ResponseEntity.ok(user);
+        }
+        catch (NoSuchElementException e){
+            log.warn("User with {} id is not found", id);
+            return UserNotFound();
+        }
+    }
     @Operation(summary = "Edit current user")
     @PutMapping()
     ResponseEntity<User> editUser(@Valid @RequestBody UserDto newUser) {

@@ -1,8 +1,10 @@
 package rest.eon.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import rest.eon.auth.SecurityUtil;
 import rest.eon.dto.TaskDto;
 import rest.eon.models.Group;
@@ -15,6 +17,7 @@ import rest.eon.repositories.TaskRepository;
 import rest.eon.repositories.UserRepository;
 import rest.eon.services.TaskService;
 
+import java.io.InvalidObjectException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -25,6 +28,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
@@ -42,13 +46,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task save(Task task) {
+    public Task save(Task task) throws InvalidObjectException {
         User currentUser = userRepository.findByEmail(SecurityUtil.getSessionUser()).get();
         List<String> currentUserTasks = new ArrayList<>();
         if (currentUser.getTasks() != null) {
             currentUser.getTasks().forEach(t -> currentUserTasks.add(getTaskById(t).get().getId()));
 
-            if (isNewTaskTimeOverlapsExistingOnes(task, currentUserTasks)) return null;
+            if (isNewTaskTimeOverlapsExistingOnes(task, currentUserTasks)) throw new InvalidObjectException("Time of this task interrupts existing one");
 
         }
         Task savedTask = taskRepository.save(task);
@@ -299,13 +303,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ResponseEntity<Task> addNewTask(TaskDto task, String group_id) {
+    public ResponseEntity<Task> addNewTask(TaskDto task, String group_id) throws InvalidObjectException {
         // checking if start time < finish time, or they are equal
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
         LocalDateTime start = LocalDateTime.parse(task.getDateStart(), formatter);
         LocalDateTime finish = LocalDateTime.parse(task.getDateFinish(), formatter);
-
-        if (start.isAfter(finish) || start.equals(finish)) return null;
+        if (start.isAfter(finish) || start.equals(finish)) throw new InvalidObjectException("Time of this task interrupts existing one");
         String currentUserEmail = SecurityUtil.getSessionUser();
         task.setUserId(userRepository.findByEmail(currentUserEmail).get().getId());
         task.setGroupId(group_id);
