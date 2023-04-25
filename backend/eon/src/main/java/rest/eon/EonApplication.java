@@ -30,9 +30,6 @@ public class EonApplication {
             }
         }
         ApplicationContext applicationContext = SpringApplication.run(EonApplication.class, args);
-
-        System.out.println((LocalDate.parse("2023-04-13T19:30:00Z".substring(0,10)).getDayOfWeek()));
-        System.out.println(LocalTime.parse("2023-04-09T23:59:00Z".substring(11,16)));
         UserNotificationService service = applicationContext.getBean(UserNotificationService.class);
         service.taskChecking();
     }

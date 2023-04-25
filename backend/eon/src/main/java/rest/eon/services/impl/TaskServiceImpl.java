@@ -148,28 +148,6 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-   /* private boolean isNewTaskTimeOverlapsExistingOnes(Task currentTask, List<String> tasks) {
-
-        LocalDateTime taskTimeStart = LocalDateTime.parse(currentTask.getDateStart(), format);
-        LocalDateTime taskTimeFinish = LocalDateTime.parse(currentTask.getDateFinish(), format);
-        for (var t : tasks) {
-            Task taskIth = taskRepository.findById(t).get();
-            LocalDateTime tTimeStart = LocalDateTime.parse(taskIth.getDateStart(), format);
-            LocalDateTime tTimeFinish = LocalDateTime.parse(taskIth.getDateFinish(), format);
-
-            // check if new task time doesn't interrupt existing task's times
-            if (!taskIth.isCompleted() &&
-                    ((tTimeStart.isBefore(taskTimeStart) && tTimeFinish.isAfter(taskTimeStart)) ||
-                            (tTimeStart.isBefore(taskTimeFinish) && tTimeFinish.isAfter(taskTimeFinish)) ||
-                            tTimeStart.isEqual(taskTimeFinish) || tTimeStart.isEqual(taskTimeStart) ||
-                            tTimeFinish.isEqual(taskTimeFinish) || tTimeFinish.isEqual(taskTimeStart)))
-                return true;
-
-        }
-        return false;
-
-    }*/
-
     @Override
     public Task update(Task task) {
         if (task.getDateStart().compareTo(task.getDateFinish()) > 0) return null;
@@ -222,7 +200,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getTasks(String group_id, String start, String finish) {
-        //TODO: improve logic to handle repetition
         String currentUserEmail = SecurityUtil.getSessionUser();
         User user = userRepository.getFirstByEmail(currentUserEmail).get();
         List<Task> tasks;

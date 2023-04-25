@@ -1,20 +1,20 @@
 ###
-POST http://localhost:8091/auth/register
+POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "nickname":"asdfas",
+  "nickname":"nagibator",
   "firstname":"Ira",
   "lastname":"Dimko",
-  "email":"asdssf@email.ru",
+  "email":"nag@email.ru",
   "password":"12345678"
 }
 ###
-POST http://localhost:8091/auth/authenticate
+POST http://localhost:8080/auth/authenticate
 Content-Type: application/json
 
 {
-  "email":"asdssf@email.ru",
+  "email":"nag@email.ru",
   "password":"12345678"
 }
 ###

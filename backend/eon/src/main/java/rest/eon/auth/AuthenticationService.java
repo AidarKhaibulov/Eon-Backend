@@ -43,6 +43,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .userId(userRepository.findByEmail(request.getEmail()).get().getId())
+                .nickname(user.getNickname())
                 .build();
     }
 
@@ -59,6 +60,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .userId(userRepository.findByEmail(request.getEmail()).get().getId())
+                .nickname(user.getNickname())
                 .build();
     }
 
