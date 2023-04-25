@@ -21,8 +21,8 @@ Authorization: Bearer {{auth_token}}
 
 {
   "sortingMethod": "defaultDesc",
-  "dateStart": "2023-08-28T07:00:00Z",
-  "dateFinish": "2023-08-30T00:00:00Z"
+  "dateStart": "2023-09-29T00:00:00Z",
+  "dateFinish": "2023-09-30T00:00:00Z"
 }
 
 ### Get all tasks via path variables
@@ -45,8 +45,8 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "dateStart": "2023-08-30T13:40:00Z",
-  "dateFinish": "2023-08-30T16:00:00Z",
+  "dateStart": "2023-09-29T13:40:00Z",
+  "dateFinish": "2023-09-30T16:00:00Z",
   "title": "workout",
   "description": "some desc"
 }
