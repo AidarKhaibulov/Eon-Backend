@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .nickname(user.getNickname())
+                .id(user.getId())
                 .build();
     }
 }

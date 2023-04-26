@@ -18,7 +18,7 @@ GET http://localhost:8080/user/findById/642bebf27dc7615220d7d2a9
 Authorization: Bearer {{auth_token}}
 
 ### Find user by nickname
-GET http://localhost:8080/user/findByName/nagib
+GET http://localhost:8080/user/findByName/V
 Authorization: Bearer {{auth_token}}
 
 ###

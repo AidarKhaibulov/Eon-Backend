@@ -9,4 +9,5 @@ public class ProfileInfo {
     private String nickname;
     private String firstname;
     private String lastname;
+    private String id;
 }
