@@ -276,7 +276,23 @@ public class TaskServiceImpl implements TaskService {
         LocalDateTime cFinish = LocalDateTime.parse(cur.getDateFinish(), format);
         LocalDateTime s = LocalDateTime.parse(start, format);
         LocalDateTime f = LocalDateTime.parse(finish, format);
-        return ((cStart.isAfter(s) || cStart.isEqual(s)) || (cFinish.isBefore(f) || cFinish.isEqual(f)));
+
+        // if task is in interval [s,f]
+        boolean taskInInterval=(cStart.isAfter(s) || cStart.isEqual(s)) && (cFinish.isBefore(f) || cFinish.isEqual(f));
+
+        // if task's start time is in interval [s,f]
+        boolean taskStartInInterval=
+                (cStart.isAfter(s) || cStart.isEqual(s)) &&
+                (cStart.isBefore(f) || cStart.isEqual(f)) &&
+                cFinish.isAfter(f);
+
+        // if task's finish time is in interval [s,f]
+        boolean taskFinishInInterval=
+                (cFinish.isAfter(s) || cFinish.isEqual(s)) &&
+                (cFinish.isBefore(f) || cFinish.isEqual(f)) &&
+                cStart.isBefore(s);
+
+        return (taskInInterval || taskStartInInterval || taskFinishInInterval);
     }
 
     @Override

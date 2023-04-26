@@ -17,6 +17,7 @@ import rest.eon.dto.UserDto;
 import rest.eon.models.User;
 import rest.eon.services.UserService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -44,9 +45,9 @@ public class UserController {
     @GetMapping("/findByName/{nickname}")
     public ResponseEntity<?> findUserByNickname(@PathVariable String nickname) {
         try {
-            ProfileInfo  user = userService.findByNickname(nickname);
-            log.info("User founded {}",user);
-            return ResponseEntity.ok(user);
+            List<ProfileInfo> users = userService.findByNickname(nickname);
+            log.info("Matches founded");
+            return ResponseEntity.ok(users);
         }
         catch (NoSuchElementException e){
             log.warn("User with {} nickname is not found", nickname);

@@ -2,12 +2,14 @@ package rest.eon.services.impl;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 import rest.eon.dto.ProfileInfo;
 import rest.eon.models.User;
 import rest.eon.repositories.UserRepository;
 import rest.eon.services.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,8 +46,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileInfo findByNickname(String nickname) {
-        return mapToProfileInfo(userRepository.findByNickname(nickname).orElseThrow());
+    public List<ProfileInfo> findByNickname(String nickname) {
+        List<User> users=userRepository.findByNicknameContaining(nickname);
+        if (users != null)
+            return users.stream().map(this::mapToProfileInfo).toList();
+        else throw new RuntimeException("No matches");
     }
 
     @Override
