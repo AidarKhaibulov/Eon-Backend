@@ -24,7 +24,9 @@ public class JwtService {
             return extractClaim(token, Claims::getSubject);
 
     }
-
+    public void setKey(String key){
+        JWT_SECRET_KEY=key;
+    }
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
